@@ -1,33 +1,52 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const images = [
-    { name: 'photo1.jpg', url: 'uploads/photo1.jpg' },
-    { name: 'meme2.png', url: 'uploads/meme2.png' },
-    { name: 'funny3.gif', url: 'uploads/funny3.gif' }
-  ];
-
   const imagesTable = document.getElementById('imagesTable');
+  const emptyMessage = document.getElementById('emptyMessage');
 
-  images.forEach(image => {
+  if (!Array.isArray(imageList) || imageList.length === 0) {
+    emptyMessage.classList.remove('hidden');
+    return;
+  }
+
+  imageList.forEach(imageName => {
     const row = document.createElement('div');
     row.className = 'image-row';
 
     const img = document.createElement('img');
     img.className = 'image-preview';
-    img.src = '/' + image.url;
-    img.alt = 'Preview';
+    img.src = `/images/${encodeURIComponent(imageName)}`;
+    img.alt = imageName;
+    img.onerror = () => {
+      img.src = '/static/img_project/icon_image/picture.svg';
+    };
+
+    const name = document.createElement('p');
+    name.className = 'image-name';
+    name.textContent = imageName;
 
     const url = document.createElement('p');
     url.className = 'image-url';
-    url.textContent = window.location.origin + '/' + image.url;
+    url.textContent = `${window.location.origin}/images/${encodeURIComponent(imageName)}`;
 
     const del = document.createElement('img');
     del.className = 'delete-icon';
-    del.src = '/static/images/icon_image/delete_basket.svg';
+    del.src = '/static/img_project/icon_image/delete_basket.svg';
     del.alt = 'Delete';
 
-    del.addEventListener('click', () => {
-      row.remove();
-      // TODO: отправить запрос на сервер для удаления файла
+    del.addEventListener('click', async () => {
+      const res = await fetch('/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: imageName })
+      });
+
+      if (res.ok) {
+        row.remove();
+        if (!imagesTable.querySelector('.image-row')) {
+          emptyMessage.classList.remove('hidden');
+        }
+      } else {
+        alert('⚠️ Failed to delete image.');
+      }
     });
 
     row.appendChild(img);
@@ -36,6 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
     imagesTable.appendChild(row);
   });
 });
+
+
+
 
 
 

@@ -2,11 +2,11 @@
   box-sizing: border-box;
 }
 
-body, html {
+html, body {
   margin: 0;
   padding: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
   font-family: 'Inter', sans-serif;
   background-color: #151515;
   color: #FFFFFF;
@@ -24,8 +24,8 @@ body, html {
 
 .header-title h1 {
   font-size: 16px;
-  font-weight: 400;
-  line-height: 150%;
+  font-weight: 600;
+  line-height: 1.5;
   letter-spacing: -0.04em;
   margin-bottom: 10px;
   white-space: nowrap;
@@ -34,7 +34,7 @@ body, html {
 .header-subtitle p {
   font-size: 14px;
   font-weight: 400;
-  line-height: 150%;
+  line-height: 1.5;
   letter-spacing: -0.04em;
   margin-bottom: 20px;
   white-space: nowrap;
@@ -57,13 +57,33 @@ body, html {
   cursor: pointer;
 }
 
+.btn:hover,
+.btn:focus-visible {
+  background-color: #004dcc;
+  outline: none;
+}
+
 #hero-image {
   max-width: 426px;
   max-height: 559px;
   object-fit: contain;
+  width: 100%;
+  height: auto;
 }
 
+/* Адаптивность для узких экранов */
+@media (max-width: 480px) {
+  .btn {
+    width: 100%;
+    max-width: 220px;
+  }
 
+  .header-title h1,
+  .header-subtitle p {
+    white-space: normal;
+    text-wrap: balance;
+  }
+}
 
 
 

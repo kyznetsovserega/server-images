@@ -3,38 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Images List</title>
-
-  <!-- Стили -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_upload_photos.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_images.css') }}" />
-
-  <!-- Шрифт -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <title>Uploaded Images</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_upload_photos.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_images.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="hero">
     <div class="container">
+      <h1>Upload Photos</h1>
+      <p class="subtitle">Upload selfies, memes, or any fun pictures here.</p>
 
-      <h1>Your Uploaded Images</h1>
-      <p class="subtitle">Here is a list of all uploaded images.</p>
-
-      <!-- Вкладки -->
+      <!-- Tabs -->
       <div class="tabs">
-        <button class="tab" id="uploadTab" onclick="window.location.href='{{ url_for('upload_photos') }}'">Upload</button>
-        <button class="tab active" id="imagesTab">Images</button>
+        <a href="{{ url_for('upload') }}" class="tab" id="uploadTab">Upload</a>
+        <a href="{{ url_for('gallery') }}" class="tab active" id="imagesTab">Images</a>
       </div>
 
-      <!-- Таблица с изображениями -->
-      <div class="images-table" id="imagesTable">
-        <!-- JavaScript dynamically inserts rows here -->
+      <!-- Table Header -->
+      <div class="images-header">
+        <span class="column-header">Name</span>
+        <span class="column-header">Url</span>
+        <span class="column-header">Delete</span>
       </div>
 
+      <!-- Image rows -->
+      <div class="images-table" id="imagesTable"></div>
+
+      <!-- Message if no images -->
+      <p id="emptyMessage" class="subtitle hidden">No images uploaded yet.</p>
     </div>
   </div>
 
-  <!-- Скрипты -->
+  <script>
+    const imageList = {{ images | tojson }};
+  </script>
   <script src="{{ url_for('static', filename='js/images.js') }}"></script>
   <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
 </body>
 </html>
+

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hero Page</title>
-  <link rel="stylesheet" href="style_home_page.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Image Hosting — HOME</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_home_page.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -15,10 +15,12 @@
     <div class="header-subtitle">
       <p>Upload selfies, memes, or any fun pictures here.</p>
     </div>
-    <a href="#" class="btn" id="go-to-new-page" >TAIL-ENT SHOWCASE</a>
+        <a href="{{ url_for('upload_photos_redirect') }}" class="btn">TAIL-ENT SHOWCASE</a>
     <img id="hero-image" src="" alt="Random hero image">
   </section>
 
-  <script src="scripts/main.js"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
+
+

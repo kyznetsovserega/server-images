@@ -3,11 +3,11 @@
   box-sizing: border-box;
 }
 
-body, html {
+html, body {
   margin: 0;
   padding: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
   font-family: 'Inter', sans-serif;
   background-color: #F2F5FF;
   color: #0B0B0B;
@@ -25,250 +25,208 @@ body, html {
 /* ========== 3. Контейнер ========== */
 .container {
   max-width: 600px;
-  width: 80%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-/* ========== 4. Заголовок и подзаголовок ========== */
+/* ========== 4. Заголовки ========== */
 h1 {
   font-size: 16px;
-  font-weight: 700;
-  line-height: 14px;
-  letter-spacing: -0.04em;
-  margin-bottom: 2px; /* ← уменьшает расстояние до <p> */
+  font-weight: 600;
+  margin-bottom: 4px;
   white-space: nowrap;
 }
 
 .subtitle {
   font-size: 14px;
   font-weight: 400;
-  line-height: 150%;
-  letter-spacing: -0.04em;
-  margin-top: 4px;
   margin-bottom: 40px;
   white-space: nowrap;
 }
-
 
 /* ========== 5. Табы ========== */
 .tabs {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .tab {
-  width: 70px;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 600;
   color: #ADC0F8;
   background: none;
   border: none;
   cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+}
+
+.tab:hover,
+.tab:focus-visible {
+  color: #004dcc;
 }
 
 .tab.active {
   color: #0060FF;
 }
 
-/* ========== 6. Блок загрузки ========== */
+/* ========== 6. Зона загрузки ========== */
 .upload-box {
-  width: 100%;                     /* адаптивная ширина */
-  max-width: 539px;              /* ограничение по максимуму */
-  max-height: 200px;             /* гарантированная высота */
-  padding: 16px 32px;            /* отступы внутри */
-  border: 1px dashed #0060FF;
+  width: 100%;
+  max-width: 540px;
+  padding: 16px 24px;
+  border: 2px dashed #0060FF;
   border-radius: 10px;
-  background-color: transparent;
-
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  margin-bottom: 24px;
+  transition: background-color 0.2s ease;
+}
 
-  margin: 0 auto 32px;           /* центрирование + отступ снизу */
-  box-sizing: border-box;
+.upload-box.drag-over {
+  background-color: #e0eaff;
+  border-color: #004dcc;
 }
 
 .upload-icon {
   width: 48px;
-  height: auto;
-  margin-bottom: 20px;
-}
-
-.description {
-  font-size: 14px;
-  font-weight: 400;
-  margin-bottom: 10px;
-}
-
-.info-text {
-  font-size: 14px;
-  font-weight: 400;
-  color: #ADC0F8;
-  white-space: pre-line;
-}
-/* кнопка загрузки */
-.browse-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #0060FF;
-  color: #FFFFFF;
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  width: 100%;
-  max-width: 539px;
-  height: 39px;
-  border-radius: 7px;
-  cursor: pointer;
-  margin-top: 15px;
-}
-.browse-btn:hover {
-  background-color: #004dcc;
-}
-.browse-btn input[type="file"] {
-  display: none;
-}
-
-/* ========== 7. Вывод загруженного файла ========== */
-.current-upload {
-  width: 100%;                    /* Элемент занимает всю доступную ширину родителя */
-  max-width: 540px;              /* Но не больше 540px */
-  max-height: 62px;             /* Ограничение по высоте (на всякий случай) */
-  margin-top: 20px;              /* Отступ сверху — отделяет блок от предыдущего */
-  white-space: nowrap;           /* Текст не переносится на новую строку */
-}
-
-.upload-label {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  text-align: left;        /* ← Добавлено: выравнивание текста по левому краю */
-  width: 100%;             /* ← Чтобы занимал всю ширину родителя */
-  padding-left: 0;         /* ← Убедись, что нет лишнего отступа */
-}
-
-
-.upload-url {
-  display: flex;                 /* Горизонтальное размещение элементов внутри */
-  align-items: center;          /* Выравнивание по вертикали */
-  border: 1px solid #0060FF;    /* Синяя рамка */
-  border-radius: 8px;           /* Скругление углов */
-  overflow: hidden;             /* Обрезает выходящий контент (например, скругления) */
-  background-color: #FAFAFA;    /* Светлый фон */
-  height: 48px;                 /* Фиксированная высота блока */
-}
-
-.upload-url input {
-  flex: 1;                       /* Инпут растягивается на всю доступную ширину */
-  padding: 10px;                 /* Внутренние отступы */
-  font-size: 12px;               /* Размер текста */
-  background-color: #FAFAFA;    /* Фон инпута совпадает с фоном контейнера */
-  border: none;                 /* Без границ */
-  color: #0B0B0B80;              /* Белый текст (если нужно, можно изменить для читаемости) */
-  outline: none;                /* Убирает синий контур при фокусе */
-}
-
-.copy-btn {
-  width: 59px;
-  height: 30px;
-  padding: 10px 16px;           /* Отступы внутри кнопки */
-  font-size: 12px;              /* Размер текста */
-  font-weight: 600;             /* Полужирный текст */
-  background-color: #0060FF;    /* Синий фон */
-  border-radius: 8px;           /* Скругление углов (возможно не видно из-за overflow: hidden) */
-  border: none;                 /* Без основной рамки */
-  border-left: 1px solid #004dcc; /* Разделительная линия между инпутом и кнопкой */
-  color: white;                 /* Белый текст */
-  cursor: pointer;              /* Курсор в виде руки при наведении */
-  text-transform: uppercase;    /* Все буквы — заглавные */
-  margin: 10px ;
-}
-
-.copy-btn:hover {
-  background-color: #004dcc;    /* Темно-синий фон при наведении */
-}
-
-
-/* ========== 8. Ошибки ========== */
-.error-text {
-  color: #FF4C4C;                /* Красный цвет для текста ошибки */
-  font-size: 13px;               /* Размер шрифта */
-  margin-top: 10px;              /* Отступ сверху */
-}
-
-
-/* ========== 9. Адаптив ========== */
-@media (max-width: 600px) {
-  .upload-box,
-  .browse-btn,
-  .current-upload {
-    width: 100%;
-    aspect-ratio: 4 / 3; /* или 16/9, 1/1 — по нужной тебе пропорции */
-  }
-}
-
-/* ========== 10. Состояния загрузки ========== */
-.hidden {
-  display: none !important;
-}
-
-
-.upload-success,
-.upload-failed {
-  width: 100%;
-  max-width: 540px;
-  padding: 20px 24px;
-  border: 1px solid #0060FF;
-  border-radius: 10px;
-  background-color: #FAFAFA;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 32px;
-  box-sizing: border-box;
-}
-
-.status-icon {
-  width: 48px;
-  height: auto;
   margin-bottom: 16px;
 }
 
 .status-title {
   font-size: 16px;
   font-weight: 700;
-  line-height: 19px;
   margin-bottom: 8px;
-  letter-spacing: -0.04em;
+  line-height: 1.3;
+  transition: color 0.2s ease;
 }
 
 .status-title.success {
-  color: #0BB07B; /* зелёный */
+  color: #0BB07B;
 }
 
 .status-title.error {
-  color: #FF4C4C; /* красный */
+  color: #FF4C4C;
 }
 
-.status-subtitle {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 150%;
-  letter-spacing: -0.04em;
-  color: #6D6D6D;
+.info-text {
+  font-size: 13px;
+  color: #6c84b5;
   text-align: center;
-  margin-bottom: 0;
+  white-space: pre-line;
 }
-.upload-box.drag-over {
-  background-color: #e0eaff;
-  border-color: #004dcc;
+
+/* ========== 7. Кнопка загрузки ========== */
+.browse-btn {
+  background-color: #0060FF;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  width: 100%;
+  max-width: 540px;
+  height: 39px;
+  border-radius: 7px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.browse-btn:hover,
+.browse-btn:focus-visible {
+  background-color: #004dcc;
+  outline: none;
+}
+
+.browse-btn input[type="file"] {
+  display: none;
+}
+
+/* ========== 8. Текущая загрузка ========== */
+.current-upload {
+  width: 100%;
+  max-width: 540px;
+  margin-top: 20px;
+}
+
+.upload-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+/* Ссылка */
+.upload-url {
+  display: flex;
+  align-items: center;
+  border: 1px solid #0060FF;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #FAFAFA;
+  height: 48px;
+  margin-bottom: 10px;
+}
+
+.upload-url input {
+  flex: 1;
+  padding: 10px;
+  font-size: 12px;
+  border: none;
+  background-color: transparent;
+  color: #0B0B0B80;
+  outline: none;
+}
+
+.copy-btn {
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #0060FF;
+  color: white;
+  border: none;
+  border-left: 1px solid #004dcc;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.copy-btn:hover,
+.copy-btn:focus-visible {
+  background-color: #004dcc;
+  outline: none;
+}
+
+/* ========== 9. Сообщения об ошибках ========== */
+.hidden {
+  display: none !important;
+}
+
+/* ========== 10. Адаптив ========== */
+@media (max-width: 600px) {
+  .upload-box,
+  .browse-btn,
+  .current-upload {
+    width: 100%;
+  }
+
+  .tab {
+    font-size: 16px;
+  }
+
+  .info-text,
+  .description {
+    font-size: 13px;
+  }
 }

@@ -1,82 +1,54 @@
+<!-- Файл: templates/upload_photos.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Upload Photos</title>
-
-  <!-- Подключение CSS-файла со стилями -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style_upload_photos.css') }}" />
-
-  <!-- Подключение шрифта Inter с Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
   <div class="hero">
     <div class="container">
-
-      <!-- Заголовок страницы -->
       <h1>Upload Photos</h1>
       <p class="subtitle">Upload selfies, memes, or any fun pictures here.</p>
 
-      <!-- Вкладки -->
       <div class="tabs">
-        <button class="tab active" id="uploadTab">Upload</button>
-        <button class="tab" id="imagesTab" onclick="window.location.href='{{ url_for('images') }}'">Images</button>
+        <a href="{{ url_for('upload') }}" class="tab active" id="uploadTab">Upload</a>
+        <a href="{{ url_for('gallery') }}" class="tab" id="imagesTab">Images</a>
       </div>
 
-      <!-- Альтернативная явная кнопка перехода (если нужно отдельно) -->
-      <!-- <a href="{{ url_for('images') }}" class="btn">Go to Images Page</a> -->
-
-      <!-- Зона drag-and-drop загрузки -->
+      <!-- Зона загрузки -->
       <div class="upload-box">
-        <img src="{{ url_for('static', filename='images/icon_image/feather_upload-cloud.svg') }}" alt="Upload Icon" class="upload-icon" />
-        <p class="description">Select a file or drag and drop here</p>
-        <p class="info-text">Only support .jpg, .png and .gif.<br>Maximum file size is 5MB</p>
+        <img class="upload-icon" src="{{ url_for('static', filename='img_project/icon_image/feather_upload-cloud.svg') }}" alt="Upload Icon">
+        <p class="status-title" id="statusTitle">Select a file or drag and drop here</p>
+        <p class="info-text" id="infoText">Only support .jpg, .png and .gif.<br>Maximum file size is 5MB</p>
       </div>
 
-      <!-- Кнопка выбора файла через проводник -->
       <label class="browse-btn" for="fileInput">
         BROWSE YOUR FILE
         <input type="file" id="fileInput" />
       </label>
 
-      <!-- Блок состояния загрузки -->
       <div class="current-upload">
         <p class="upload-label">Current Upload</p>
-
-        <!-- Успешная загрузка -->
-        <div class="upload-success hidden">
-          <img src="{{ url_for('static', filename='images/icon_image/feather_check-circle.svg') }}" alt="Success Icon" class="status-icon" />
-          <p class="status-title success">Upload Successful!</p>
-          <p class="status-subtitle">Your image has been uploaded successfully.</p>
-        </div>
-
-        <!-- Ошибка загрузки -->
-        <div class="upload-failed hidden">
-          <img src="{{ url_for('static', filename='images/icon_image/feather_x-circle.svg') }}" alt="Error Icon" class="status-icon" />
-          <p class="status-title error">Upload Failed!</p>
-          <p class="status-subtitle">Something went wrong. Please try again.</p>
-        </div>
-
-        <!-- Отображение URL загруженного файла -->
         <div class="upload-url">
           <input type="text" value="https://" readonly />
           <button class="copy-btn">COPY</button>
         </div>
       </div>
 
-      <!-- Контейнер для списка загруженных изображений -->
-      <div class="images-table" id="imagesTable">
-        <!-- JS добавит превью загруженных файлов -->
-      </div>
-
+      <div class="notification" style="display: none;"></div>
     </div>
   </div>
 
-  <!-- JS -->
+  <script>
+    const imageList = {{ images | tojson | safe | default('[]') }};
+  </script>
   <script src="{{ url_for('static', filename='js/upload_photos.js') }}"></script>
   <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
-
 </body>
 </html>
+
+
