@@ -27,8 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
 
       if (response.ok && data.url) {
-        inputField.value = data.url;
+        const fullUrl = `${window.location.origin}${data.url}`;
+        inputField.value = fullUrl;
         statusTitle.textContent = 'File uploaded!';
+
         statusTitle.style.color = '#0BB07B';
         infoText.textContent = 'Image uploaded successfully.';
         showNotification('✅ Image uploaded successfully!');

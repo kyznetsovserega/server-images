@@ -11,28 +11,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const row = document.createElement('div');
     row.className = 'image-row';
 
-    const img = document.createElement('img');
-    img.className = 'image-preview';
-    img.src = `/images/${encodeURIComponent(imageName)}`;
-    img.alt = imageName;
-    img.onerror = () => {
-      img.src = '/static/img_project/icon_image/picture.svg';
+    // Превью изображения
+    const preview = document.createElement('img');
+    preview.className = 'image-preview';
+    preview.src = `/images/${encodeURIComponent(imageName)}`;
+    preview.alt = imageName;
+    preview.onerror = () => {
+      preview.src = '/static/img_project/icon_image/picture.svg';
     };
 
-    const name = document.createElement('p');
+    // Имя файла (всегда отображается полностью)
+    const name = document.createElement('div');
     name.className = 'image-name';
-    name.textContent = imageName;
+    name.appendChild(preview);
+    name.append(document.createTextNode(` ${imageName}`));
 
-    const url = document.createElement('p');
+    // URL файла (сокращённый <a>, открывается в новой вкладке)
+    const url = document.createElement('div');
     url.className = 'image-url';
-    url.textContent = `${window.location.origin}/images/${encodeURIComponent(imageName)}`;
 
-    const del = document.createElement('img');
-    del.className = 'delete-icon';
-    del.src = '/static/img_project/icon_image/delete_basket.svg';
-    del.alt = 'Delete';
+    const link = document.createElement('a');
+    link.href = `${window.location.origin}/images/${encodeURIComponent(imageName)}`;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.className = 'image-link';
+    link.textContent = link.href;
 
-    del.addEventListener('click', async () => {
+    url.appendChild(link);
+
+    // Кнопка удаления
+    const delContainer = document.createElement('div');
+    delContainer.className = 'delete-container';
+
+    const delBtn = document.createElement('img');
+    delBtn.className = 'delete-icon';
+    delBtn.src = '/static/img_project/icon_image/delete_basket.svg';
+    delBtn.alt = 'Delete';
+
+    delBtn.addEventListener('click', async () => {
       const res = await fetch('/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -45,16 +61,21 @@ document.addEventListener('DOMContentLoaded', () => {
           emptyMessage.classList.remove('hidden');
         }
       } else {
-        alert('⚠️ Failed to delete image.');
+        alert('⚠️ Не удалось удалить изображение.');
       }
     });
 
-    row.appendChild(img);
+    delContainer.appendChild(delBtn);
+
+    // Итоговая строка
+    row.appendChild(name);
     row.appendChild(url);
-    row.appendChild(del);
+    row.appendChild(delContainer);
     imagesTable.appendChild(row);
   });
 });
+
+
 
 
 

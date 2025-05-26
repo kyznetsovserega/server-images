@@ -4,42 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Uploaded Images</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_upload_photos.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style_images.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="hero">
-    <div class="container">
-      <h1>Upload Photos</h1>
-      <p class="subtitle">Upload selfies, memes, or any fun pictures here.</p>
+  <div class="container">
+    <h1>Upload Photos</h1>
+    <p class="subtitle">Upload selfies, memes, or any fun pictures here.</p>
 
-      <!-- Tabs -->
-      <div class="tabs">
-        <a href="{{ url_for('upload') }}" class="tab" id="uploadTab">Upload</a>
-        <a href="{{ url_for('gallery') }}" class="tab active" id="imagesTab">Images</a>
-      </div>
-
-      <!-- Table Header -->
-      <div class="images-header">
-        <span class="column-header">Name</span>
-        <span class="column-header">Url</span>
-        <span class="column-header">Delete</span>
-      </div>
-
-      <!-- Image rows -->
-      <div class="images-table" id="imagesTable"></div>
-
-      <!-- Message if no images -->
-      <p id="emptyMessage" class="subtitle hidden">No images uploaded yet.</p>
+    <div class="tabs">
+      <a href="{{ url_for('upload') }}" class="tab">Upload</a>
+      <a href="{{ url_for('gallery') }}" class="tab active">Images</a>
     </div>
+
+    <div class="images-header">
+      <span class="column-header column-name">Name</span>
+      <span class="column-header column-url">Url</span>
+      <span class="column-header column-delete">Delete</span>
+    </div>
+
+    <div class="images-table" id="imagesTable"></div>
+
   </div>
 
   <script>
     const imageList = {{ images | tojson }};
   </script>
   <script src="{{ url_for('static', filename='js/images.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
 </body>
 </html>
-

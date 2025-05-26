@@ -1,206 +1,189 @@
-/* ========== 1. Глобальные стили ========== */
+/* ======= 1. Общие стили ======= */
 * {
-  box-sizing: border-box;
+  box-sizing: border-box; /* Учитывает паддинги и бордеры внутри размеров элементов */
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100vh;
-  font-family: 'Inter', sans-serif;
-  background-color: #F2F5FF;
-  color: #0B0B0B;
-  overflow-x: hidden;
+  margin: 0; /* Убираем внешние отступы по умолчанию */
+  padding: 0; /* Убираем внутренние отступы по умолчанию */
+  width: 100%; /* Ширина на весь экран */
+  min-height: 100vh; /* Минимальная высота - весь экран */
+  font-family: 'Inter', sans-serif; /* Основной шрифт */
+  background-color: #F2F5FF; /* Цвет фона */
+  color: #0B0B0B; /* Основной цвет текста */
+  overflow-x: hidden; /* Запрет на горизонтальный скролл */
 }
 
-/* ========== 2. Центровка содержимого ========== */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 30px;
-}
-
-/* ========== 3. Контейнер ========== */
 .container {
-  max-width: 900px;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  max-width: 900px; /* Ограничиваем ширину */
+  margin: 0 auto; /* Центрируем по горизонтали */
+  padding: 30px 20px; /* Внутренние отступы */
+  text-align: center; /* Центрируем текст */
 }
 
-/* ========== 4. Заголовок и подзаголовок ========== */
+/* ======= 2. Заголовки ======= */
 h1 {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 4px;
+  font-size: 16px; /* Размер заголовка */
+  font-weight: 700; /* Жирный шрифт */
+  margin-bottom: 4px; /* Отступ снизу */
 }
 
 .subtitle {
-  font-size: 14px;
-  font-weight: 400;
-  margin-top: 0;
-  margin-bottom: 32px;
+  font-size: 14px; /* Размер подзаголовка */
+  font-weight: 400; /* Обычный шрифт */
+  margin-bottom: 32px; /* Отступ снизу */
 }
 
-/* ========== 5. Табы ========== */
+/* ======= 3. Навигация ======= */
 .tabs {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 32px;
+  display: flex; /* Горизонтальное расположение */
+  justify-content: center; /* Центрирование */
+  gap: 10px; /* Промежуток между табами */
+  margin-bottom: 32px; /* Отступ снизу */
 }
 
 .tab {
-  font-size: 18px;
-  font-weight: 600;
-  background: none;
-  border: none;
-  color: #ADC0F8;
-  padding: 8px 16px;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: color 0.2s ease;
+  font-size: 16px; /* Размер текста */
+  font-weight: 600; /* Полужирный */
+  color: #ADC0F8; /* Цвет текста */
+  background: none; /* Без фона */
+  border: none; /* Без рамки */
+  cursor: pointer; /* Курсор при наведении */
+  padding: 6px 14px; /* Внутренние отступы */
+  border-radius: 6px; /* Скругление углов */
+  transition: color 0.2s ease; /* Анимация цвета */
+  text-decoration: none; /* Без подчёркивания */
 }
 
 .tab:hover,
 .tab:focus-visible {
-  color: #004dcc;
-  outline: none;
+  color: #004dcc; /* Цвет при наведении и фокусе */
+  outline: none; /* Без рамки фокуса */
 }
 
 .tab.active {
-  color: #0060FF;
+  color: #0060FF; /* Цвет активной вкладки */
 }
 
-/* ========== 6. Заголовок таблицы ========== */
+/* ======= 4. Заголовок таблицы ======= */
 .images-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 16px;
-  margin-bottom: 8px;
-  font-weight: 600;
-  font-size: 14px;
-  color: #555;
+  display: flex; /* Горизонтальное размещение */
+  justify-content: space-between; /* Равномерное распределение */
+  padding: 0 10px; /* Горизонтальный отступ */
+  font-weight: 400; /* Обычный вес шрифта */
+  font-size: 14px; /* Размер текста */
+  color: #0B0B0B; /* Цвет текста */
+  margin-bottom: 16px; /* Отступ снизу */
 }
 
-.column-name {
-  width: 20%;
-  text-align: left;
+.column-header {
+  flex: 1; /* Растягивается равномерно */
+  text-align: left; /* Выравнивание по левому краю */
 }
 
-.column-url {
-  width: 65%;
-  text-align: left;
-}
+.column-name { width: 40%; } /* Ширина колонки "Имя" */
+.column-url { width: 40%; } /* Ширина колонки "Ссылка" */
+.column-delete { width: 20%; text-align: right; } /* Ширина и выравнивание колонки "Удалить" */
 
-.column-delete {
-  width: 15%;
-  text-align: right;
-}
-
-/* ========== 7. Таблица изображений ========== */
+/* ======= 5. Таблица изображений ======= */
 .images-table {
-  width: 100%;
+  width: 100%; /* Ширина таблицы - вся доступная */
 }
 
-/* ========== 8. Строка изображения ========== */
+/* ======= 6. Строка изображения ======= */
 .image-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  border: 1px solid #E0E0E0;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  transition: transparent;
+  display: flex; /* Расположение в строку */
+  align-items: center; /* Центрирование по вертикали */
+  justify-content: space-between; /* Промежуток между элементами */
+  margin-bottom: 12px; /* Отступ снизу */
+  gap: 10px; /* Промежуток между блоками */
 }
 
-.image-row:hover {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-/* ========== 9. Превью изображения ========== */
-.image-preview {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  flex-shrink: 0;
-  margin-right: 8px;
-}
-
-/* ========== 10. Имя и URL ========== */
+/* ======= 7. Превью и имя ======= */
 .image-name {
-  width: 20%;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  flex: 1 1 30%; /* Адаптивная ширина */
+  display: flex; /* Горизонтальное расположение */
+  align-items: center; /* Центр по вертикали */
+  font-size: 16px; /* Размер текста */
+  overflow: hidden; /* Скрыть выходящий текст */
+  white-space: nowrap; /* Не переносить строку */
+  text-overflow: ellipsis; /* Троеточие при обрезке */
+  min-width: 160px; /* Минимальная ширина */
 }
 
+.image-preview {
+  width: 30px; /* Размер превью */
+  height: 30px;
+  object-fit: contain; /* Сохранять пропорции */
+  margin-right: 10px; /* Отступ справа от превью */
+  flex-shrink: 0; /* Не сжимать */
+}
+
+/* ======= 8. URL-инпут ======= */
 .image-url {
-  width: 65%;
-  font-size: 14px;
-  word-break: break-all;
-  text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  flex: 1 1 60%; /* Адаптивная ширина */
+  overflow: hidden; /* Скрыть выходящий текст */
+  white-space: nowrap; /* Не переносить строку */
+  text-align: left; /* Выравнивание по левому краю */
 }
 
-/* ========== 11. Иконка удаления ========== */
-.delete-icon {
-  width: 24px;
-  height: 24px;
-  background-color: #FFE6E6;
-  border-radius: 50%;
-  padding: 4px;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
+.image-link {
+  display: inline-block; /* В одну строку */
+  max-width: 100%; /* Максимум по ширине блока */
+  font-size: 14px; /* Размер текста */
+  color: #0B0B0B; /* Синий цвет */
+  text-decoration: none; /* Без подчёркивания */
+  overflow: hidden; /* Скрытие лишнего */
+  text-overflow: ellipsis; /* Троеточие */
+  white-space: nowrap; /* Не переносить строку */
 }
 
-.delete-icon:hover,
-.delete-icon:focus-visible {
-  opacity: 0.7;
-  outline: none;
+.image-link:hover {
+  text-decoration: underline; /* Подчёркивание при наведении */
 }
 
+/* ======= 9. Удаление ======= */
 .delete-container {
-  width: 15%;
-  text-align: right;
+  flex-shrink: 0; /* Не сжимать */
+  text-align: right; /* Выравнивание справа */
+  width: 30px; /* Ширина контейнера */
 }
 
-/* ========== 12. Адаптив ========== */
+.delete-icon {
+  width: 30px; /* Размер иконки */
+  height: 30px;
+  cursor: pointer; /* Курсор-рука */
+  transition: opacity 0.2s ease; /* Плавное изменение прозрачности */
+}
+
+.delete-icon:hover {
+  opacity: 0.7; /* Прозрачность при наведении */
+}
+
+/* ======= 10. Адаптив ======= */
 @media (max-width: 600px) {
   .images-header {
-    display: none;
+    display: none; /* Скрыть заголовки колонок на маленьком экране */
   }
 
   .image-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    flex-direction: column; /* Расположение в столбец */
+    align-items: flex-start; /* Выравнивание по левому краю */
+    gap: 10px; /* Отступы между элементами */
   }
 
   .image-name,
   .image-url,
   .delete-container {
-    width: 100%;
-    text-align: left;
+    width: 100%; /* Полная ширина */
+    text-align: left; /* Выравнивание текста слева */
   }
 
   .delete-icon {
-    align-self: flex-end;
+    align-self: flex-end; /* Иконка удаления справа */
   }
 }
+
 
 
 

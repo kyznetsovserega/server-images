@@ -36,9 +36,13 @@ def allowed_file(filename: str) -> bool:
     return ext in ALLOWED_EXTENSIONS
 
 
+
+
 def generate_unique_filename(original: str) -> str:
-    ext = original.rsplit('.', 1)[1].lower()
-    return f"{uuid.uuid4().hex}.{ext}"
+    name, ext = os.path.splitext(original)
+    safe_name = secure_filename(name)
+    short_id = uuid.uuid4().hex[:6]
+    return f"{safe_name}_{short_id}{ext.lower()}"
 
 
 def get_file_size(file) -> int:
@@ -112,6 +116,12 @@ def delete_image():
         logging.info(f"Удалено изображение: {filename}")
         return jsonify({'success': True})
     return jsonify({'error': 'Файл не найден'}), 404
+
+from flask import send_from_directory
+
+@app.route('/images/<filename>')
+def serve_image(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 if __name__ == '__main__':
