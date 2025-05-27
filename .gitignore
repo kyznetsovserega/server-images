@@ -7,3 +7,4 @@ images/
 logs/
 *.db
 .DS_Store
+tree.txt

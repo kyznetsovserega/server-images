@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // === Получаем DOM-элементы ===
+  // --- Получаем DOM-элементы ---
   const fileInput = document.getElementById('fileInput');
   const uploadBox = document.querySelector('.upload-box');
   const statusTitle = document.getElementById('statusTitle');
@@ -8,11 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const copyBtn = document.querySelector('.copy-btn');
   const notification = document.querySelector('.notification');
 
-  // === Ограничения по типу и размеру файлов ===
+  // --- Ограничения по типу и размеру файлов ---
   const allowedTypes = ['image/jpg','image/jpeg', 'image/png', 'image/gif'];
   const maxSize = 5 * 1024 * 1024;
 
-  // === Обработка выбора файла через input ===
+  // --- Обработка выбора файла через input ---
   fileInput.addEventListener('change', async () => {
     const file = fileInput.files[0];
     resetState();
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!allowedTypes.includes(file.type)) return showError('Unsupported format.');
     if (file.size > maxSize) return showError('File too large. Maximum is 5MB.');
 
-    // === Устанавливаем статус загрузки ===
+    // --- Устанавливаем статус загрузки ---
     infoText.textContent = 'Uploading...';
     const formData = new FormData();
     formData.append('image', file);
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // === Drag & Drop функциональность ===
+  // --- Drag & Drop функциональность ---
 
   uploadBox.addEventListener('dragover', e => {
     e.preventDefault();
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.dispatchEvent(new Event('change'));
   });
 
-  // === Кнопка "COPY" ===
+  // --- Кнопка "COPY" ---
   copyBtn.addEventListener('click', () => {
     const text = inputField.value;
     if (!text) return;
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  // === Обработчик ошибок ===
+  // --- Обработчик ошибок ---
   function showError(message) {
     statusTitle.textContent = 'Upload failed';
     statusTitle.style.color = '#FF4C4C';
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showNotification(`${message}`);
   }
 
-  // === Сброс всех отображаемых полей ===
+  // --- Сброс всех отображаемых полей ---
   function resetState() {
     statusTitle.textContent = 'Select a file or drag and drop here';
     statusTitle.style.color = '#0B0B0B';
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inputField.value = '';
   }
 
-  // === Уведомление в правом верхнем углу (или ином месте) ===
+  // --- Уведомление в правом верхнем углу (или ином месте) ---
   function showNotification(message) {
     if (!notification) return;
     notification.textContent = message;

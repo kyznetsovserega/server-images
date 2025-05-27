@@ -17,18 +17,18 @@
       <a href="{{ url_for('gallery') }}" class="tab active">Images</a>
     </div>
 
-    <!-- === Заголовок таблицы с колонками === -->
+    <!-- Заголовок таблицы с колонками -->
     <div class="images-header">
       <span class="column-header column-name">Name</span>
       <span class="column-header column-url">Url</span>
       <span class="column-header column-delete">Delete</span>
     </div>
-    <!-- === Таблица со списком загруженных изображений === -->
+    <!-- Таблица со списком загруженных изображений -->
     <div class="images-table" id="imagesTable"></div>
 
   </div>
 
-  <!-- === Передача списка изображений из Flask в JavaScript === -->
+  <!-- Передача списка изображений из Flask в JavaScript -->
   <script>
     const imageList = {{ images | tojson }};
   </script>

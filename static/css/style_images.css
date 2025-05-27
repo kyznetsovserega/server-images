@@ -1,4 +1,4 @@
-/* === 1. Глобальные стили для HTML и Body === */
+/* --- Глобальные стили для HTML и Body --- */
 * {
   box-sizing: border-box;
 }
@@ -14,7 +14,7 @@ html, body {
   overflow-x: hidden; /* Запрет на горизонтальный скролл */
 }
 
-/* === 2. Контейнер страницы === */
+/* --- Контейнер страницы --- */
 .container {
   max-width: 900px;
   margin: 0 auto;
@@ -22,21 +22,21 @@ html, body {
   text-align: center;
 }
 
-/* === 3. Заголовок страницы === */
+/* --- Заголовок страницы --- */
 h1 {
   font-size: 16px;
   font-weight: 700;
   margin-bottom: 4px;
 }
 
-/* === 5. Подзаголовок страницы === */
+/* --- Подзаголовок страницы --- */
 .subtitle {
   font-size: 14px;
   font-weight: 400;
   margin-bottom: 32px;
 }
 
-/* === 6. Навигационные вкладки === */
+/* --- Навигационные вкладки --- */
 .tabs {
   display: flex;
   justify-content: center;
@@ -67,7 +67,7 @@ h1 {
   color: #0060FF;
 }
 
-/* === 5. Заголовок таблицы изображений === */
+/* --- Заголовок таблицы изображений --- */
 .images-header {
   display: flex;
   justify-content: space-between;
@@ -87,7 +87,7 @@ h1 {
 .column-url { width: 40%; }
 .column-delete { width: 20%; text-align: right; }
 
-/* === 6. Список загруженных изображений === */
+/* --- Список загруженных изображений --- */
 .images-table {
   width: 100%;
 }
@@ -101,7 +101,7 @@ h1 {
   gap: 10px;
 }
 
-/* === 7. Имя и превью изображения === */
+/* --- Имя и превью изображения --- */
 .image-name {
   flex: 1 1 30%;
   display: flex;
@@ -121,7 +121,7 @@ h1 {
   flex-shrink: 0;
 }
 
-/* === 8. Ссылка на изображение === */
+/* --- Ссылка на изображение --- */
 .image-url {
   flex: 1 1 60%;
   overflow: hidden;
@@ -144,7 +144,7 @@ h1 {
   text-decoration: underline;
 }
 
-/* === 9. Удаление === */
+/* =--- Удаление --- */
 .delete-container {
   flex-shrink: 0;
   text-align: right;
@@ -162,27 +162,27 @@ h1 {
   opacity: 0.7;
 }
 
-/* === 10. Адаптивная верстка === */
+/* --- Адаптивная верстка --- */
 @media (max-width: 600px) {
   .images-header {
-    display: none; /* Скрыть заголовки колонок на маленьком экране */
+    display: none;
   }
 
   .image-row {
-    flex-direction: column; /* Расположение в столбец */
-    align-items: flex-start; /* Выравнивание по левому краю */
-    gap: 10px; /* Отступы между элементами */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 
   .image-name,
   .image-url,
   .delete-container {
-    width: 100%; /* Полная ширина */
-    text-align: left; /* Выравнивание текста слева */
+    width: 100%;
+    text-align: left;
   }
 
   .delete-icon {
-    align-self: flex-end; /* Иконка удаления справа */
+    align-self: flex-end;
   }
 }
 

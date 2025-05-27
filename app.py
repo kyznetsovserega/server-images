@@ -17,7 +17,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_key")
 
-# --- Создание директорий
+# --- Создание директорий ---
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(LOG_FOLDER, exist_ok=True)
 
@@ -103,7 +103,7 @@ def gallery():
 @app.route('/delete', methods=['POST'])
 def delete_image():
     data = request.get_json()
-    filename = data.get('filename')  # исправлено
+    filename = data.get('filename')
 
     if not filename:
         return jsonify({'error': 'Имя файла не указано'}), 400
