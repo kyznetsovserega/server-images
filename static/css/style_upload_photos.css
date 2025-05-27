@@ -1,4 +1,4 @@
-/* ========== 1. Глобальные стили ========== */
+/* === 1. Глобальные стили для HTML и Body === */
 * {
   box-sizing: border-box;
 }
@@ -13,7 +13,7 @@ html, body {
   color: #0B0B0B;
 }
 
-/* ========== 2. Центровка содержимого ========== */
+/* === 2. Основной контейнер === */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -22,7 +22,7 @@ html, body {
   padding: 30px;
 }
 
-/* ========== 3. Контейнер ========== */
+/* === 3. Контейнер содержимого === */
 .container {
   max-width: 600px;
   width: 90%;
@@ -32,7 +32,7 @@ html, body {
   text-align: center;
 }
 
-/* ========== 4. Заголовки ========== */
+/* === 4. Заголовок страницы === */
 h1 {
   font-size: 16px;
   font-weight: 600;
@@ -40,6 +40,7 @@ h1 {
   white-space: nowrap;
 }
 
+/* === 5. Подзаголовок страницы === */
 .subtitle {
   font-size: 14px;
   font-weight: 400;
@@ -47,7 +48,7 @@ h1 {
   white-space: nowrap;
 }
 
-/* ========== 5. Табы ========== */
+/* === 6. Навигационные вкладки === */
 .tabs {
   display: flex;
   justify-content: center;
@@ -76,7 +77,7 @@ h1 {
   color: #0060FF;
 }
 
-/* ========== 6. Зона загрузки ========== */
+/* === 7. Область загрузки файлов === */
 .upload-box {
   width: 100%;
   max-width: 540px;
@@ -101,7 +102,7 @@ h1 {
   width: 48px;
   margin-bottom: 16px;
 }
-
+/* === 8. Иконка и текст состояния загрузки === */
 .status-title {
   font-size: 16px;
   font-weight: 700;
@@ -125,7 +126,7 @@ h1 {
   white-space: pre-line;
 }
 
-/* ========== 7. Кнопка загрузки ========== */
+/* === 9. Кнопка выбора файла === */
 .browse-btn {
   background-color: #0060FF;
   color: white;
@@ -153,7 +154,7 @@ h1 {
   display: none;
 }
 
-/* ========== 8. Текущая загрузка ========== */
+/* === 10. Блок текущей загрузки и ссылка === */
 .current-upload {
   width: 100%;
   max-width: 540px;
@@ -167,7 +168,7 @@ h1 {
   text-align: left;
 }
 
-/* Ссылка */
+/* === Ссылка === */
 .upload-url {
   display: flex;
   align-items: center;
@@ -208,12 +209,12 @@ h1 {
   outline: none;
 }
 
-/* ========== 9. Сообщения об ошибках ========== */
+/* === 11. Сообщения об ошибках === */
 .hidden {
   display: none !important;
 }
 
-/* ========== 10. Адаптив ========== */
+/* === 12. Адаптивная верстка === */
 @media (max-width: 600px) {
   .upload-box,
   .browse-btn,

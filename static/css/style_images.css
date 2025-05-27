@@ -1,166 +1,168 @@
-/* ======= 1. Общие стили ======= */
+/* === 1. Глобальные стили для HTML и Body === */
 * {
-  box-sizing: border-box; /* Учитывает паддинги и бордеры внутри размеров элементов */
+  box-sizing: border-box;
 }
 
 html, body {
-  margin: 0; /* Убираем внешние отступы по умолчанию */
-  padding: 0; /* Убираем внутренние отступы по умолчанию */
-  width: 100%; /* Ширина на весь экран */
-  min-height: 100vh; /* Минимальная высота - весь экран */
-  font-family: 'Inter', sans-serif; /* Основной шрифт */
-  background-color: #F2F5FF; /* Цвет фона */
-  color: #0B0B0B; /* Основной цвет текста */
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background-color: #F2F5FF;
+  color: #0B0B0B;
   overflow-x: hidden; /* Запрет на горизонтальный скролл */
 }
 
+/* === 2. Контейнер страницы === */
 .container {
-  max-width: 900px; /* Ограничиваем ширину */
-  margin: 0 auto; /* Центрируем по горизонтали */
-  padding: 30px 20px; /* Внутренние отступы */
-  text-align: center; /* Центрируем текст */
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  text-align: center;
 }
 
-/* ======= 2. Заголовки ======= */
+/* === 3. Заголовок страницы === */
 h1 {
-  font-size: 16px; /* Размер заголовка */
-  font-weight: 700; /* Жирный шрифт */
-  margin-bottom: 4px; /* Отступ снизу */
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
 }
 
+/* === 5. Подзаголовок страницы === */
 .subtitle {
-  font-size: 14px; /* Размер подзаголовка */
-  font-weight: 400; /* Обычный шрифт */
-  margin-bottom: 32px; /* Отступ снизу */
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 32px;
 }
 
-/* ======= 3. Навигация ======= */
+/* === 6. Навигационные вкладки === */
 .tabs {
-  display: flex; /* Горизонтальное расположение */
-  justify-content: center; /* Центрирование */
-  gap: 10px; /* Промежуток между табами */
-  margin-bottom: 32px; /* Отступ снизу */
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 32px;
 }
 
 .tab {
-  font-size: 16px; /* Размер текста */
-  font-weight: 600; /* Полужирный */
-  color: #ADC0F8; /* Цвет текста */
-  background: none; /* Без фона */
-  border: none; /* Без рамки */
-  cursor: pointer; /* Курсор при наведении */
-  padding: 6px 14px; /* Внутренние отступы */
-  border-radius: 6px; /* Скругление углов */
-  transition: color 0.2s ease; /* Анимация цвета */
-  text-decoration: none; /* Без подчёркивания */
+  font-size: 16px;
+  font-weight: 600;
+  color: #ADC0F8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+  text-decoration: none;
 }
 
 .tab:hover,
 .tab:focus-visible {
-  color: #004dcc; /* Цвет при наведении и фокусе */
-  outline: none; /* Без рамки фокуса */
+  color: #004dcc;
+  outline: none;
 }
 
 .tab.active {
-  color: #0060FF; /* Цвет активной вкладки */
+  color: #0060FF;
 }
 
-/* ======= 4. Заголовок таблицы ======= */
+/* === 5. Заголовок таблицы изображений === */
 .images-header {
-  display: flex; /* Горизонтальное размещение */
-  justify-content: space-between; /* Равномерное распределение */
-  padding: 0 10px; /* Горизонтальный отступ */
-  font-weight: 400; /* Обычный вес шрифта */
-  font-size: 14px; /* Размер текста */
-  color: #0B0B0B; /* Цвет текста */
-  margin-bottom: 16px; /* Отступ снизу */
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #0B0B0B;
+  margin-bottom: 16px;
 }
 
 .column-header {
-  flex: 1; /* Растягивается равномерно */
-  text-align: left; /* Выравнивание по левому краю */
+  flex: 1;
+  text-align: left;
 }
 
-.column-name { width: 40%; } /* Ширина колонки "Имя" */
-.column-url { width: 40%; } /* Ширина колонки "Ссылка" */
-.column-delete { width: 20%; text-align: right; } /* Ширина и выравнивание колонки "Удалить" */
+.column-name { width: 40%; }
+.column-url { width: 40%; }
+.column-delete { width: 20%; text-align: right; }
 
-/* ======= 5. Таблица изображений ======= */
+/* === 6. Список загруженных изображений === */
 .images-table {
-  width: 100%; /* Ширина таблицы - вся доступная */
+  width: 100%;
 }
 
-/* ======= 6. Строка изображения ======= */
+
 .image-row {
-  display: flex; /* Расположение в строку */
-  align-items: center; /* Центрирование по вертикали */
-  justify-content: space-between; /* Промежуток между элементами */
-  margin-bottom: 12px; /* Отступ снизу */
-  gap: 10px; /* Промежуток между блоками */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 10px;
 }
 
-/* ======= 7. Превью и имя ======= */
+/* === 7. Имя и превью изображения === */
 .image-name {
-  flex: 1 1 30%; /* Адаптивная ширина */
-  display: flex; /* Горизонтальное расположение */
-  align-items: center; /* Центр по вертикали */
-  font-size: 16px; /* Размер текста */
-  overflow: hidden; /* Скрыть выходящий текст */
-  white-space: nowrap; /* Не переносить строку */
-  text-overflow: ellipsis; /* Троеточие при обрезке */
-  min-width: 160px; /* Минимальная ширина */
+  flex: 1 1 30%;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-width: 160px;
 }
 
 .image-preview {
-  width: 30px; /* Размер превью */
+  width: 30px;
   height: 30px;
-  object-fit: contain; /* Сохранять пропорции */
-  margin-right: 10px; /* Отступ справа от превью */
-  flex-shrink: 0; /* Не сжимать */
+  object-fit: contain;
+  margin-right: 10px;
+  flex-shrink: 0;
 }
 
-/* ======= 8. URL-инпут ======= */
+/* === 8. Ссылка на изображение === */
 .image-url {
-  flex: 1 1 60%; /* Адаптивная ширина */
-  overflow: hidden; /* Скрыть выходящий текст */
-  white-space: nowrap; /* Не переносить строку */
-  text-align: left; /* Выравнивание по левому краю */
+  flex: 1 1 60%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: left;
 }
 
 .image-link {
-  display: inline-block; /* В одну строку */
-  max-width: 100%; /* Максимум по ширине блока */
-  font-size: 14px; /* Размер текста */
-  color: #0B0B0B; /* Синий цвет */
-  text-decoration: none; /* Без подчёркивания */
-  overflow: hidden; /* Скрытие лишнего */
-  text-overflow: ellipsis; /* Троеточие */
-  white-space: nowrap; /* Не переносить строку */
+  display: inline-block;
+  max-width: 100%;
+  font-size: 14px;
+  color: #0B0B0B;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .image-link:hover {
-  text-decoration: underline; /* Подчёркивание при наведении */
+  text-decoration: underline;
 }
 
-/* ======= 9. Удаление ======= */
+/* === 9. Удаление === */
 .delete-container {
-  flex-shrink: 0; /* Не сжимать */
-  text-align: right; /* Выравнивание справа */
-  width: 30px; /* Ширина контейнера */
+  flex-shrink: 0;
+  text-align: right;
+  width: 30px;
 }
 
 .delete-icon {
-  width: 30px; /* Размер иконки */
+  width: 30px;
   height: 30px;
-  cursor: pointer; /* Курсор-рука */
-  transition: opacity 0.2s ease; /* Плавное изменение прозрачности */
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .delete-icon:hover {
-  opacity: 0.7; /* Прозрачность при наведении */
+  opacity: 0.7;
 }
 
-/* ======= 10. Адаптив ======= */
+/* === 10. Адаптивная верстка === */
 @media (max-width: 600px) {
   .images-header {
     display: none; /* Скрыть заголовки колонок на маленьком экране */

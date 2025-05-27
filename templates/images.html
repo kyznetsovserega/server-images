@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- Шаблон страницы списка загруженных изображений --><!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -17,19 +17,22 @@
       <a href="{{ url_for('gallery') }}" class="tab active">Images</a>
     </div>
 
+    <!-- === Заголовок таблицы с колонками === -->
     <div class="images-header">
       <span class="column-header column-name">Name</span>
       <span class="column-header column-url">Url</span>
       <span class="column-header column-delete">Delete</span>
     </div>
-
+    <!-- === Таблица со списком загруженных изображений === -->
     <div class="images-table" id="imagesTable"></div>
 
   </div>
 
+  <!-- === Передача списка изображений из Flask в JavaScript === -->
   <script>
     const imageList = {{ images | tojson }};
   </script>
+
   <script src="{{ url_for('static', filename='js/images.js') }}"></script>
 </body>
 </html>

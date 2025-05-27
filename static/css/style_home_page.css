@@ -1,3 +1,4 @@
+/* === 1. Глобальные стили для HTML и Body === */
 * {
   box-sizing: border-box;
 }
@@ -12,6 +13,7 @@ html, body {
   color: #FFFFFF;
 }
 
+/* === 2. Основной контейнер === */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -22,6 +24,7 @@ html, body {
   padding: 30px;
 }
 
+/* === 3. Заголовок страницы === */
 .header-title h1 {
   font-size: 16px;
   font-weight: 600;
@@ -31,6 +34,7 @@ html, body {
   white-space: nowrap;
 }
 
+/* === 4. Подзаголовок страницы === */
 .header-subtitle p {
   font-size: 14px;
   font-weight: 400;
@@ -40,6 +44,7 @@ html, body {
   white-space: nowrap;
 }
 
+/* === 5. Стилизованная кнопка перехода === */
 .btn {
   display: inline-block;
   padding: 12px 16px;
@@ -57,12 +62,14 @@ html, body {
   cursor: pointer;
 }
 
+/* === 6. Эффекты наведения и фокуса для кнопки === */
 .btn:hover,
 .btn:focus-visible {
   background-color: #004dcc;
   outline: none;
 }
 
+/* === 8. Изображение героя === */
 #hero-image {
   max-width: 426px;
   max-height: 559px;
@@ -71,7 +78,7 @@ html, body {
   height: auto;
 }
 
-/* Адаптивность для узких экранов */
+/* === 10. Адаптивная верстка === */
 @media (max-width: 480px) {
   .btn {
     width: 100%;

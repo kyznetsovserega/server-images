@@ -1,21 +1,28 @@
+<!-- Шаблон домашней страницы изображений -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
+  <!-- Установка масштаба страницы для адаптивности на мобильных устройствах -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Image Hosting — HOME</title>
+  <title>HOME</title>
+
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style_home_page.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <section class="hero">
+
     <div class="header-title">
       <h1>Upload Photos</h1>
     </div>
+
     <div class="header-subtitle">
       <p>Upload selfies, memes, or any fun pictures here.</p>
     </div>
-        <a href="{{ url_for('upload_photos_redirect') }}" class="btn">TAIL-ENT SHOWCASE</a>
+
+    <a href="{{ url_for('upload_photos_redirect') }}" class="btn">TAIL-ENT SHOWCASE</a>
+
     <img id="hero-image" src="" alt="Random hero image">
   </section>
 

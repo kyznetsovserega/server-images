@@ -2,31 +2,33 @@ document.addEventListener('DOMContentLoaded', () => {
   const imagesTable = document.getElementById('imagesTable');
   const emptyMessage = document.getElementById('emptyMessage');
 
+  // === Если список пуст — показываем сообщение об отсутствии изображений ===
   if (!Array.isArray(imageList) || imageList.length === 0) {
     emptyMessage.classList.remove('hidden');
     return;
   }
 
+  // === Обрабатываем каждый файл из imageList ===
   imageList.forEach(imageName => {
     const row = document.createElement('div');
     row.className = 'image-row';
 
-    // Превью изображения
+    // === Превью изображения ===
     const preview = document.createElement('img');
     preview.className = 'image-preview';
     preview.src = `/images/${encodeURIComponent(imageName)}`;
     preview.alt = imageName;
     preview.onerror = () => {
-      preview.src = '/static/img_project/icon_image/picture.svg';
+      preview.src = '/static/img_project/icon_image/picture.svg'; //— подставляем заглушку ===
     };
 
-    // Имя файла (всегда отображается полностью)
+    // === Блок с именем файла (отображается полностью) ===
     const name = document.createElement('div');
     name.className = 'image-name';
     name.appendChild(preview);
     name.append(document.createTextNode(` ${imageName}`));
 
-    // URL файла (сокращённый <a>, открывается в новой вкладке)
+    // Блок с ссылкой(сокращённый <a>, открывается в новой вкладке)
     const url = document.createElement('div');
     url.className = 'image-url';
 
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     url.appendChild(link);
 
-    // Кнопка удаления
+    // === Кнопка удаления изображения ===
     const delContainer = document.createElement('div');
     delContainer.className = 'delete-container';
 
@@ -48,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     delBtn.src = '/static/img_project/icon_image/delete_basket.svg';
     delBtn.alt = 'Delete';
 
+    // === Обработчик клика по кнопке удаления ===
     delBtn.addEventListener('click', async () => {
       const res = await fetch('/delete', {
         method: 'POST',
@@ -67,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     delContainer.appendChild(delBtn);
 
-    // Итоговая строка
+    // === Итоговая строка ===
     row.appendChild(name);
     row.appendChild(url);
     row.appendChild(delContainer);
