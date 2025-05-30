@@ -1,10 +1,27 @@
+# IDE, виртуальное окружение, системные файлы
+.idea/
+.vscode/
+.venv/
+.DS_Store
+*.iml
+
+# Python служебные файлы
 __pycache__/
 *.pyc
-.env
-venv/
+*.pyo
+*.pyd
+
+# Логи, базы, прочие временные файлы
 *.log
+*.sqlite3
+*.db
+.env
+
+# Project volumes (каталоги для Docker)
 images/
 logs/
-*.db
-.DS_Store
-tree.txt
+
+#Тесты
+upload.ps1
+upload.sh
+image.jpg

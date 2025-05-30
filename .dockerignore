@@ -1,0 +1,47 @@
+# Python служебные файлы
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Виртуальные окружения Python
+env/
+venv/
+.venv/
+.Python
+
+# Файлы, созданные операционной системой
+.DS_Store
+Thumbs.db
+
+# Конфигурации IDE и редакторов
+.idea/
+.vscode/
+*.iml
+
+# Артефакты тестирования и сборки
+*.pytest_cache/
+.coverage
+.tox/
+dist/
+build/
+
+#Тесты
+upload.ps1
+upload.sh
+image.jpg
+
+# Логи и временные файлы
+logs/
+*.log
+*.sqlite3
+
+# Папка с изображениями пользователей
+images/
+
+# Git-репозиторий и gitignore
+.git
+.gitignore
+
+# Сам файл .dockerignore
+.dockerignore

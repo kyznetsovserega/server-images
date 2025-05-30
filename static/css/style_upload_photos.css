@@ -32,19 +32,21 @@ html, body {
   text-align: center;
 }
 
-/* --- Заголовок страницы --- */
-h1 {
+.header-title h1 {
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 4px;
+  line-height: 1.5;
+  letter-spacing: -0.04em;
+  margin-bottom: 10px;
   white-space: nowrap;
 }
 
-/* --- Подзаголовок страницы --- */
-.subtitle {
+.header-subtitle p {
   font-size: 14px;
   font-weight: 400;
-  margin-bottom: 40px;
+  line-height: 1.5;
+  letter-spacing: -0.04em;
+  margin-bottom: 20px;
   white-space: nowrap;
 }
 
@@ -220,14 +222,10 @@ h1 {
   .browse-btn,
   .current-upload {
     width: 100%;
+    max-width: 100%;
+    padding: 10px;
   }
-
-  .tab {
-    font-size: 16px;
-  }
-
+  .tab { font-size: 15px; }
   .info-text,
-  .description {
-    font-size: 13px;
-  }
+  .description { font-size: 13px; }
 }

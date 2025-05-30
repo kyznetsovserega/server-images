@@ -22,49 +22,51 @@ html, body {
   text-align: center;
 }
 
-/* --- Заголовок страницы --- */
-h1 {
+.header-title h1 {
   font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 4px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.04em;
+  margin-bottom: 10px;
+  white-space: nowrap;
 }
 
-/* --- Подзаголовок страницы --- */
-.subtitle {
+.header-subtitle p {
   font-size: 14px;
   font-weight: 400;
-  margin-bottom: 32px;
+  line-height: 1.5;
+  letter-spacing: -0.04em;
+  margin-bottom: 20px;
+  white-space: nowrap;
 }
 
-/* --- Навигационные вкладки --- */
-.tabs {
+tabs {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 32px;
 }
 
 .tab {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   color: #ADC0F8;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: 6px;
-  transition: color 0.2s ease;
   text-decoration: none;
+  transition: color 0.2s;
+}
+
+.tab.active {
+  color: #0060FF;
 }
 
 .tab:hover,
 .tab:focus-visible {
   color: #004dcc;
-  outline: none;
-}
-
-.tab.active {
-  color: #0060FF;
 }
 
 /* --- Заголовок таблицы изображений --- */
@@ -75,24 +77,25 @@ h1 {
   font-weight: 400;
   font-size: 14px;
   color: #0B0B0B;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+  margin-top:40px
 }
 
-.column-header {
-  flex: 1;
-  text-align: left;
-}
-
-.column-name { width: 40%; }
-.column-url { width: 40%; }
+.column-header { flex: 1; text-align: left; }
+.column-name   { width: 40%; }
+.column-url    { width: 40%; }
 .column-delete { width: 20%; text-align: right; }
 
-/* --- Список загруженных изображений --- */
 .images-table {
   width: 100%;
 }
 
+/* --- Отсутствие изображения --- */
+.hidden {
+  display: none !important;
+}
 
+/* --- Список загруженных изображений --- */
 .image-row {
   display: flex;
   align-items: center;
@@ -106,7 +109,7 @@ h1 {
   flex: 1 1 30%;
   display: flex;
   align-items: center;
-  font-size: 16px;
+  font-size: 14px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -144,7 +147,7 @@ h1 {
   text-decoration: underline;
 }
 
-/* =--- Удаление --- */
+/* --- Удаление --- */
 .delete-container {
   flex-shrink: 0;
   text-align: right;
@@ -167,20 +170,17 @@ h1 {
   .images-header {
     display: none;
   }
-
   .image-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
-
   .image-name,
   .image-url,
   .delete-container {
     width: 100%;
     text-align: left;
   }
-
   .delete-icon {
     align-self: flex-end;
   }

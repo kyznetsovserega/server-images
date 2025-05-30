@@ -1,11 +1,11 @@
-<!-- Шаблон страницы загрузки изображений -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
+  <!-- Установка масштаба страницы для адаптивности на мобильных устройствах -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Upload Photos</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_upload_photos.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_upload_photos.css') }}"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
@@ -13,49 +13,38 @@
     <div class="container">
       <h1>Upload Photos</h1>
       <p class="subtitle">Upload selfies, memes, or any fun pictures here.</p>
-
-      <!-- Навигационные табы -->
+      <!-- Навигационные вкладки -->
       <div class="tabs">
-        <!-- Активный таб загрузки -->
-        <a href="{{ url_for('upload') }}" class="tab active" id="uploadTab">Upload</a>
-        <!-- Таб перехода к галерее -->
-        <a href="{{ url_for('gallery') }}" class="tab" id="imagesTab">Images</a>
+        <a href="{{ url_for('handle_upload') }}" class="tab active" id="uploadTab">Upload</a>
+        <a href="{{ url_for('show_gallery') }}" class="tab" id="imagesTab">Images</a>
       </div>
-
       <!-- Зона drag-and-drop загрузки -->
       <div class="upload-box">
-
-        <img class="upload-icon" src="{{ url_for('static', filename='img_project/icon_image/feather_upload-cloud.svg') }}" alt="Upload Icon">
-        <!-- Основной заголовок статуса -->
+        <img class="upload-icon" src="{{ url_for('static', filename='img_project/icon_image/feather_upload-cloud.svg') }}"
+             alt="Upload Icon">
         <p class="status-title" id="statusTitle">Select a file or drag and drop here</p>
-        <!-- Информационное сообщение -->
         <p class="info-text" id="infoText">Only support .jpg, .png and .gif.<br>Maximum file size is 5MB</p>
       </div>
-
       <!-- Кнопка выбора файла вручную -->
       <label class="browse-btn" for="fileInput">
         BROWSE YOUR FILE
-        <input type="file" id="fileInput" />
+        <input type="file" id="fileInput"/>
       </label>
-
       <!-- Блок отображения текущей загруженной ссылки -->
       <div class="current-upload">
         <p class="upload-label">Current Upload</p>
         <div class="upload-url">
-          <!-- Поле для отображения ссылки на изображение -->
-          <input type="text" value="https://" readonly />
-          <!-- Кнопка копирования ссылки -->
+          <input type="text" value="https://" readonly/>
           <button class="copy-btn">COPY</button>
         </div>
       </div>
-
-      <div class="notification" style="display: none;"></div>
     </div>
   </div>
 
   <script>
     const imageList = {{ images | tojson | safe | default('[]') }};
   </script>
+
   <script src="{{ url_for('static', filename='js/upload_photos.js') }}"></script>
   <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
 </body>

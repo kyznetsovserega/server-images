@@ -13,7 +13,7 @@ html, body {
   color: #FFFFFF;
 }
 
-/* --- 2. Основной контейнер--- */
+/* --- Основной контейнер --- */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -24,7 +24,6 @@ html, body {
   padding: 30px;
 }
 
-/* --- Заголовок страницы --- */
 .header-title h1 {
   font-size: 16px;
   font-weight: 600;
@@ -34,7 +33,6 @@ html, body {
   white-space: nowrap;
 }
 
-/* --- Подзаголовок страницы --- */
 .header-subtitle p {
   font-size: 14px;
   font-weight: 400;
@@ -44,7 +42,7 @@ html, body {
   white-space: nowrap;
 }
 
-/* --- Стилизованная кнопка перехода --- */
+/* --- Кнопка перехода --- */
 .btn {
   display: inline-block;
   padding: 12px 16px;
@@ -62,7 +60,6 @@ html, body {
   cursor: pointer;
 }
 
-/* --- Эффекты наведения и фокуса для кнопки --- */
 .btn:hover,
 .btn:focus-visible {
   background-color: #004dcc;

@@ -1,7 +1,8 @@
-<!-- Шаблон страницы списка загруженных изображений --><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+    <!-- Установка масштаба страницы для адаптивности на мобильных устройствах -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Uploaded Images</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style_images.css') }}">
@@ -11,26 +12,25 @@
   <div class="container">
     <h1>Upload Photos</h1>
     <p class="subtitle">Upload selfies, memes, or any fun pictures here.</p>
-
+    <!-- Навигационные вкладки -->
     <div class="tabs">
-      <a href="{{ url_for('upload') }}" class="tab">Upload</a>
-      <a href="{{ url_for('gallery') }}" class="tab active">Images</a>
+      <a href="{{ url_for('handle_upload') }}" class="tab">Upload</a>
+      <a href="{{ url_for('show_gallery') }}" class="tab active">Images</a>
     </div>
-
-    <!-- Заголовок таблицы с колонками -->
+    <!-- Заголовок таблицы -->
     <div class="images-header">
       <span class="column-header column-name">Name</span>
       <span class="column-header column-url">Url</span>
       <span class="column-header column-delete">Delete</span>
     </div>
-    <!-- Таблица со списком загруженных изображений -->
-    <div class="images-table" id="imagesTable"></div>
-
+    <!-- Таблица файлов -->
+    <div class="images-table" id="imagesTable" data-images='{{ images | tojson | safe }}'></div>
+    <div id="emptyMessage" class="hidden">No images uploaded yet.</div>
   </div>
 
-  <!-- Передача списка изображений из Flask в JavaScript -->
+  <!-- Список изображений из backend -->
   <script>
-    const imageList = {{ images | tojson }};
+    const imageList = {{ images | tojson | safe | default('[]') }};
   </script>
 
   <script src="{{ url_for('static', filename='js/images.js') }}"></script>
