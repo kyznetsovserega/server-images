@@ -12,7 +12,7 @@ db_config = {
     "user":os.getenv("DB_USER"),
     "password":os.getenv("DB_PASSWORD"),
     "host":os.getenv("DB_HOST", "localhost" ),
-    "port":os.getenv("DB_PORT", 5432)
+    "port":os.getenv("DB_PORT", "5432")
 }
 
 # Класс-менеджер для работы с БД
@@ -29,10 +29,10 @@ class PostgresManager:
                 self.conn = psycopg2.connect(**self.config)
                 break
             except psycopg2.OperationalError:
-                logging.warning("Postgres not ready yet, retrying...")
+                logging.warning("Postgres не готов, пробуем снова...")
                 time.sleep(2)
         else:
-            raise RuntimeError("Could not connect to Postgres after 10 tries")
+            raise RuntimeError("Не удалось подключиться к Postgres после 10 попыток")
         self.cur = self.conn.cursor()
         return self
 
@@ -56,7 +56,7 @@ class PostgresManager:
                 );
         """)
         self.conn.commit()
-        logging.info("Table checked/created.")
+        logging.info("Таблица images проверена/создана.")
 
     # Добавляем запись в таблицу images
     def add_image(self, filename, original_name, size, file_type):
@@ -69,10 +69,10 @@ class PostgresManager:
                 (filename, original_name,size,file_type)
             )
             self.conn.commit()
-            logging.info(f"Image {filename} added.")
+            logging.info(f"Image {filename} добавлено в базу.")
         except Exception as e:
             self.conn.rollback()
-            logging.error(f"Error adding image: {e}")
+            logging.error(f"Ошибка добавления изображения: {e}")
 
     # Получаем список всех или части изображений с поддержкой пагинации
     def get_images(self, limit=None, offset=None):
@@ -93,7 +93,8 @@ class PostgresManager:
     # Удаление записи об изображении по id и возвращает имя файла для удаления с диска
     def delete_image(self, image_id):
         self.cur.execute(
-            "DELETE FROM images WHERE id = %s RETURNING filename;", (image_id,)
+            "DELETE FROM images WHERE id = %s RETURNING filename;",
+            (image_id,)
         )
         result = self.cur.fetchall()
         self.conn.commit()
@@ -107,7 +108,7 @@ class PostgresManager:
         return self.cur.fetchone() [0]
 
 
-#  Текстовый вызов
+#  Тестовый вызов — для ручной проверки работы менеджера
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     with PostgresManager() as db:

@@ -1,13 +1,21 @@
+from logging.handlers import RotatingFileHandler
+
 from flask import Flask, request, render_template, url_for, redirect, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from typing import Optional
 from PIL import Image, UnidentifiedImageError
+from datetime import datetime
+import psycopg2
 import logging
+from logging.handlers import RotatingFileHandler
 import io
 import os
 import uuid
+from dotenv import load_dotenv
 
 from db_utils import PostgresManager
+
+load_dotenv()
 
 # --- Конфигурация ---
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 МБ
@@ -39,13 +47,15 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(LOG_FOLDER, exist_ok=True)
 
 # --- Настройка логирования ---
-logging.basicConfig(
-    filename=os.path.join(LOG_FOLDER, 'app.log'),
-    level=logging.INFO,
-    format='[%(asctime)s] %(levelname)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-    encoding="utf-8"
+log_file = os.path.join(LOG_FOLDER, 'app.log')
+log_handler = RotatingFileHandler(log_file, maxBytes=2_000_000, encoding= 'utf-8')
+log_formatter = logging.Formatter(
+    '[%(asctime)s] %(levelname)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
 )
+log_handler.setFormatter(log_formatter)
+logging.getLogger().addHandler(log_handler)
+logging.getLogger().setLevel(logging.INFO)
 
 # --- Унифицированное логирование ---
 def log_action(message: str, level: str = "info"):
@@ -107,9 +117,9 @@ def home():
     return render_template('index.html')
 
 # --- Перенаправление на загрузку ---
-#@app.route('/upload_photos')
-#def upload_photos_redirect():
-#    return redirect(url_for('handle_upload'))
+@app.route('/upload_photos')
+def upload_photos_redirect():
+    return redirect(url_for('handle_upload'))
 
 # --- Загрузка изображения ---
 @app.route('/upload', methods=['GET', 'POST'])
@@ -192,12 +202,15 @@ def images_list():
 def delete_image(image_id):
     try:
         with PostgresManager() as db:
-            filename = db.delete_image('image_id')
+            filename = db.delete_image(image_id)
     except Exception as ex:
         log_action(f"Ошибка удаления записи из базы: {ex}", level="error")
         return redirect(url_for('images_list'))
 
     if filename:
+        if isinstance(filename, (tuple, list)):
+            filename = filename[0]
+
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         try:
             if os.path.exists(filepath):
