@@ -7,6 +7,8 @@ import io
 import os
 import uuid
 
+from db_utils import PostgresManager
+
 # --- Конфигурация ---
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 МБ
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
@@ -52,7 +54,12 @@ def log_action(message: str, level: str = "info"):
         "error": "Ошибка",
         "warning": "Внимание"
     }.get(level.lower(), "Успех")
-    logging.info(f"{prefix}: {message}")
+    if level == "error":
+        logging.error(f"{prefix}: {message}")
+    elif level == "warning":
+        logging.warning(f"{prefix}: {message}")
+    else:
+        logging.info(f"{prefix}: {message}")
 
 log_action("Сервер запущен.")
 
@@ -100,9 +107,9 @@ def home():
     return render_template('index.html')
 
 # --- Перенаправление на загрузку ---
-@app.route('/upload_photos')
-def upload_photos_redirect():
-    return redirect(url_for('handle_upload'))
+#@app.route('/upload_photos')
+#def upload_photos_redirect():
+#    return redirect(url_for('handle_upload'))
 
 # --- Загрузка изображения ---
 @app.route('/upload', methods=['GET', 'POST'])
@@ -121,39 +128,89 @@ def handle_upload():
         filename = secure_filename(file.filename)
         unique_filename = generate_unique_filename(filename)
         save_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
-        file.save(save_path)
-        os.chmod(save_path, 0o664)  # Права доступа
+        try:
+            file.save(save_path)
+            os.chmod(save_path, 0o664)  # Права доступа
+        except Exception as ex:
+            log_action(f" Ошибка при сохранении файла {unique_filename}:{ex}", level="error")
+            return jsonify({'error': 'Ошибка при сохранении файла'}), 500
+
+        size = os.stat(save_path).st_size # Размер в байтах
+        file_type = unique_filename.rsplit('.', 1)[-1].lower()
+
+        # Сохранение метаданные в БД
+        try:
+            with PostgresManager() as db:
+                db.add_image(
+                    filename = unique_filename,
+                    original_name = filename,
+                    size = size,
+                    file_type = file_type
+                )
+        except Exception as ex:
+            os.remove(save_path)
+            log_action(f"Ошибка при добавлении файла в базу: {ex}", level="error")
+            return jsonify({'error': 'Ошибка сохранения в базе'}), 500
 
         log_action(f"изображение {unique_filename} загружено.")
         return jsonify({'url': f"/images/{unique_filename}"})
 
-    image_files = [f for f in os.listdir(app.config['UPLOAD_FOLDER']) if allowed_file(f)]
-    return render_template('upload_photos.html', images=image_files)
+    return render_template('upload_photos.html')
 
 # --- Галерея изображений ---
 @app.route('/images')
-def show_gallery():
-    files = [f for f in os.listdir(app.config['UPLOAD_FOLDER']) if allowed_file(f)]
-    return render_template('images.html', images=files)
+def images_list():
+    try:
+        page = int(request.args.get('page', 1))
+        if page < 1:
+            page = 1
+    except ValueError:
+        page = 1
+
+    per_page = 10
+    offset = (page -1 ) * per_page
+
+    try:
+        with PostgresManager() as db:
+            images = db.get_images(limit = per_page, offset=offset)
+            total =db.get_image_count()
+    except Exception as ex:
+        log_action(f"Ошибка при получении списка изображений: {ex}", level="error")
+        images, total = [], 0
+
+    total_pages = (total + per_page - 1) // per_page # Количество страниц
+
+    return render_template(
+        'images.html',
+        images = images,
+        page = page,
+        total_pages = total_pages
+    )
 
 # --- Удаление изображения по имени ---
-@app.route('/delete', methods=['POST'])
-def delete_image():
-    data = request.get_json()
-    filename = data.get('filename')
+@app.route('/delete/<int:image_id>', methods=['POST'])
+def delete_image(image_id):
+    try:
+        with PostgresManager() as db:
+            filename = db.delete_image('image_id')
+    except Exception as ex:
+        log_action(f"Ошибка удаления записи из базы: {ex}", level="error")
+        return redirect(url_for('images_list'))
 
-    if not filename:
-        log_action("Имя файла не указано для удаления", level="error")
-        return jsonify({'error': 'Имя файла не указано'}), 400
+    if filename:
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        try:
+            if os.path.exists(filepath):
+                os.remove(filepath)
+                log_action(f"изображение {filename} удалено.")
+            else:
+                log_action(f" файл с id {image_id} не найдено для удаления", level="error")
+        except Exception as ex:
+            log_action(f"Ошибка при удалении файла {filename}: {ex}", level="error")
+    else:
+        log_action(f"Файл с id {image_id} не найден для удаления", level="error")
 
-    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    if os.path.exists(path):
-        os.remove(path)
-        log_action(f"изображение {filename} удалено.")
-        return jsonify({'success': True})
-
-    log_action(f"файл {filename} не найден для удаления", level="error")
-    return jsonify({'error': 'Файл не найден'}), 404
+    return redirect(url_for('images_list'))
 
 # --- Отдача изображения ---
 @app.route('/images/<filename>')
