@@ -1,11 +1,7 @@
-from logging.handlers import RotatingFileHandler
-
 from flask import Flask, request, render_template, url_for, redirect, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from typing import Optional
 from PIL import Image, UnidentifiedImageError
-from datetime import datetime
-import psycopg2
 import logging
 from logging.handlers import RotatingFileHandler
 import io
@@ -33,9 +29,11 @@ def is_docker():
 if is_docker():
     UPLOAD_FOLDER = '/app/images'
     LOG_FOLDER = '/app/logs'
+    BACKUP_FOLDER = '/app/backups_old'
 else:
     UPLOAD_FOLDER = 'images'
     LOG_FOLDER = 'logs'
+    BACKUP_FOLDER = 'backups_old'
 
 # --- Инициализация Flask ---
 app = Flask(__name__)
@@ -45,6 +43,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_key")
 # --- Создание директорий ---
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(LOG_FOLDER, exist_ok=True)
+os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
 # --- Настройка логирования ---
 log_file = os.path.join(LOG_FOLDER, 'app.log')
@@ -56,6 +55,8 @@ log_formatter = logging.Formatter(
 log_handler.setFormatter(log_formatter)
 logging.getLogger().addHandler(log_handler)
 logging.getLogger().setLevel(logging.INFO)
+# logging.getLogger().handlers = [log_handler] --- если дублируется ---
+
 
 # --- Унифицированное логирование ---
 def log_action(message: str, level: str = "info"):
@@ -168,7 +169,7 @@ def handle_upload():
     return render_template('upload_photos.html')
 
 # --- Галерея изображений ---
-@app.route('/images')
+@app.route('/images-list')
 def images_list():
     try:
         page = int(request.args.get('page', 1))
@@ -191,7 +192,7 @@ def images_list():
     total_pages = (total + per_page - 1) // per_page # Количество страниц
 
     return render_template(
-        'images.html',
+        'images-list.html',
         images = images,
         page = page,
         total_pages = total_pages

@@ -93,10 +93,8 @@ class PostgresManager:
     # Удаление записи об изображении по id и возвращает имя файла для удаления с диска
     def delete_image(self, image_id):
         self.cur.execute(
-            "DELETE FROM images WHERE id = %s RETURNING filename;",
-            (image_id,)
-        )
-        result = self.cur.fetchall()
+            "DELETE FROM images WHERE id = %s RETURNING filename;", (image_id,))
+        result = self.cur.fetchone()
         self.conn.commit()
         if result:
             return result[0]
