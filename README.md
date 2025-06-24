@@ -79,6 +79,10 @@ server-images/
 - Отдача изображения через Nginx — менее 0.1 сек
 
 ---
+## Инструкция по запуску скрипта БЭКЕПА:
+
+python backup_db.py
+
 ## Инструкция по восстановлению бэкапа!!!
 
 docker exec -i pg_database psql -U server_images_user server_images_db < backups/backup_2025-06-24_170000.sql

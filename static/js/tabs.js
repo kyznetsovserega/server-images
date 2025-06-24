@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (imagesTab && !imagesTab.classList.contains('active')) {
     imagesTab.addEventListener('click', () => {
-      window.location.href = '/images';
+      window.location.href = '/images-list';
     });
   }
 });

@@ -40,9 +40,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_key")
 
-# --- Создание таблицы images при запуске ---
-with PostgresManager() as db:
-    db.create_table()
+
 
 # --- Создание директорий ---
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -77,6 +75,19 @@ def log_action(message: str, level: str = "info"):
         logging.info(f"{prefix}: {message}")
 
 log_action("Сервер запущен.")
+
+# --- Создание таблицы images при запуске ---
+def init_db_if_needed():
+    try:
+        with PostgresManager() as db:
+            db.create_table()
+            logging.info("Таблица images проверена/создана.")
+            print("Таблица images проверена/создана.")
+    except Exception as ex:
+        logging.info(f"Ошибка при создании таблицы images: {ex}")
+        print(f"Ошибка при создании таблицы images: {ex}")
+
+init_db_if_needed()
 
 # --- Проверка допустимого расширения файла ---
 def allowed_file(filename: str) -> bool:
@@ -170,7 +181,7 @@ def handle_upload():
         log_action(f"изображение {unique_filename} загружено.")
         return jsonify({'url': f"/images/{unique_filename}"})
 
-    return render_template('upload_photos.html')
+    return render_template('upload_photos.html', images=[])
 
 # --- Галерея изображений ---
 @app.route('/images-list')
@@ -238,7 +249,9 @@ def serve_image(filename):
 
 # --- Запуск сервера ---
 if __name__ == '__main__':
+
     log_action(f"Запуск на http://0.0.0.0:8000")
     app.run(host='0.0.0.0', port=8000, debug=True)
+
 
 

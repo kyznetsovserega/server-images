@@ -15,18 +15,19 @@
     <!-- Навигационные вкладки -->
     <div class="tabs">
       <a href="{{ url_for('handle_upload') }}" class="tab">Upload</a>
-      <a href="{{ url_for('show_gallery') }}" class="tab active">Images</a>
+      <a href="{{ url_for('images_list') }}" class="tab active">Images</a>
     </div>
     <!-- Заголовок таблицы -->
     <div class="images-header">
-      <span class="column-header column-name">Name</span>
-      <span class="column-header column-url">Url</span>
-      <span class="column-header column-delete">Delete</span>
+      <span class="column-header column-filename">Имя файла</span>
+      <span class="column-header column-original">Оригинальное имя</span>
+      <span class="column-header column-size">Размер (КБ)</span>
+      <span class="column-header column-date">Дата загрузки</span>
+      <span class="column-header column-type">Тип</span>
+      <span class="column-header column-delete">Удалить</span>
     </div>
-    <!-- Таблица файлов -->
     <div class="images-table" id="imagesTable" data-images='{{ images | tojson | safe }}'></div>
-    <div id="emptyMessage" class="hidden">No images uploaded yet.</div>
-  </div>
+    <div id="emptyMessage" class="hidden">Нет загруженных изображений.</div>
 
   <!-- Список изображений из backend -->
   <script>
