@@ -40,6 +40,10 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_key")
 
+# --- Создание таблицы images при запуске ---
+with PostgresManager() as db:
+    db.create_table()
+
 # --- Создание директорий ---
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(LOG_FOLDER, exist_ok=True)
@@ -236,3 +240,5 @@ def serve_image(filename):
 if __name__ == '__main__':
     log_action(f"Запуск на http://0.0.0.0:8000")
     app.run(host='0.0.0.0', port=8000, debug=True)
+
+

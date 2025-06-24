@@ -24,9 +24,8 @@ services:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    # порт наружу необязательно, если не нужен прямой доступ к БД!
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./backups:/backups
@@ -48,4 +47,5 @@ volumes:
   images:
   logs:
   db_data:
+  backups:
 
