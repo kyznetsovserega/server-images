@@ -51,13 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Дата загрузки ---э
   const dateCell = document.createElement('div');
   dateCell.className = 'image-date';
-  // --- Форматирование даты ---
-    if (img[4]) {
-      // Обрезаем микросекунды
-        dateCell.textContent = String(img[4]).slice(0, 19);
-      } else {
-        dateCell.textContent = '';
-      }
+  if (img[4]) {
+    dateCell.textContent = img[4]; // Просто выводим строку!
+  } else {
+    dateCell.textContent = '';
+  }
 
   // --- Тип файла ---
   const typeCell = document.createElement('div');

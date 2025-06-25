@@ -8,6 +8,7 @@ import io
 import os
 import uuid
 from dotenv import load_dotenv
+from datetime import  datetime
 
 from db_utils import PostgresManager
 
@@ -205,10 +206,23 @@ def images_list():
         images, total = [], 0
 
     total_pages = (total + per_page - 1) // per_page # Количество страниц
+    # --- Формируем дату ---
+    formatted_images =[]
+    for img in images:
+        dt = img[4]
+        if isinstance(dt, datetime):
+            upload_time_str = dt.strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(dt, str):
+            upload_time_str = dt[:19]
+        else:
+            upload_time_str = ''
+        formatted_images.append(
+            (img[0], img[1], img[2], img[3], upload_time_str, img[5])
+        )
 
     return render_template(
         'images-list.html',
-        images = images,
+        images = formatted_images,
         page = page,
         total_pages = total_pages
     )
