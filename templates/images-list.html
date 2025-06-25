@@ -5,6 +5,7 @@
     <!-- Установка масштаба страницы для адаптивности на мобильных устройствах -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Uploaded Images</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style_images.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -18,20 +19,21 @@
       <a href="{{ url_for('images_list') }}" class="tab active">Images</a>
     </div>
     <!-- Заголовок таблицы -->
-    <div class="images-header">
-      <span class="column-header column-filename">Имя файла</span>
-      <span class="column-header column-original">Оригинальное имя</span>
-      <span class="column-header column-size">Размер (КБ)</span>
-      <span class="column-header column-date">Дата загрузки</span>
-      <span class="column-header column-type">Тип</span>
-      <span class="column-header column-delete">Удалить</span>
-    </div>
+      <div class="images-header">
+        <div class="column-preview"></div> <!-- Пустая ячейка для превью -->
+        <div class="column-filename">Имя файла</div>
+        <div class="column-original">Оригинальное имя</div>
+        <div class="column-size">Размер (КБ)</div>
+        <div class="column-date">Дата загрузки</div>
+        <div class="column-type">Тип</div>
+        <div class="column-delete">Удалить</div>
+      </div>
     <div class="images-table" id="imagesTable" data-images='{{ images | tojson | safe }}'></div>
     <div id="emptyMessage" class="hidden">Нет загруженных изображений.</div>
-
+  </div>
   <!-- Список изображений из backend -->
   <script>
-    const imageList = {{ images | tojson | safe | default('[]') }};
+    const imageList = {{ images | tojson | safe }};
   </script>
 
   <script src="{{ url_for('static', filename='js/images.js') }}"></script>

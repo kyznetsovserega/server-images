@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const imagesTable = document.getElementById('imagesTable');
   const emptyMessage = document.getElementById('emptyMessage');
-  const imageList = JSON.parse(imagesTable.dataset.images);
+ // const imageList = JSON.parse(imagesTable.dataset.images);
 
   // --- Если список пуст ---
   if (!Array.isArray(imageList) || imageList.length === 0) {
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   preview.alt[1];
   //--- Если превью не отражается - заглушка ---
   preview.onerror = () => {
-    preview = '/static/img_project/icon_image/picture.svg';
+    preview.src = '/static/img_project/icon_image/picture.svg';
   };
   previewCell.appendChild(preview)
 
@@ -53,11 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
   dateCell.className = 'image-date';
   // --- Форматирование даты ---
     if (img[4]) {
-      // Обрезаем микросекунды, если есть
-      dateCell.textContent = String(img[4]).replace('T', ' ').replace(/\.\d+$/, '');
-    } else {
-      dateCell.textContent = '';
-    }
+      // Обрезаем микросекунды
+        dateCell.textContent = String(img[4]).slice(0, 19);
+      } else {
+        dateCell.textContent = '';
+      }
 
   // --- Тип файла ---
   const typeCell = document.createElement('div');
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
   delBtn.alt = 'Delete';
   delBtn.addEventListener('click', async () => {
     if (!confirm('Удалить изображение ?')) return;
-    try:
+    try {
       const res = await fetch(`/delete/${img[0]}`, { method: 'POST' });
       if (res.ok) {
         row.remove();
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     delCell.appendChild(delBtn);
 
     // --- Итоговая строка ---
-    row.appendChild(previewCell]);
+    row.appendChild(previewCell);
     row.appendChild(fileCell);
     row.appendChild(origCell);
     row.appendChild(sizeCell);
