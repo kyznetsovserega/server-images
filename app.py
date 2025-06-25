@@ -194,7 +194,7 @@ def images_list():
     except ValueError:
         page = 1
 
-    per_page = 10
+    per_page = 5
     offset = (page -1 ) * per_page
 
     try:

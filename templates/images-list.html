@@ -35,7 +35,14 @@
   <script>
     const imageList = {{ images | tojson | safe }};
   </script>
-
+  <!-- Кнопки пагинации -->
+  <div class="pagination">
+    <button id="btn-prev" class="pagination-btn">««</button>
+    <span id="page-number">{{ page }}</span>
+    <span id="page-of">из</span>
+    <span id="total-pages">{{ total_pages }}</span>
+    <button id="btn-next" class="pagination-btn">»»</button>
+  </div>
   <script src="{{ url_for('static', filename='js/images.js') }}"></script>
 </body>
 </html>

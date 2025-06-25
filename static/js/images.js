@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const imagesTable = document.getElementById('imagesTable');
   const emptyMessage = document.getElementById('emptyMessage');
- // const imageList = JSON.parse(imagesTable.dataset.images);
+
 
   // --- Если список пуст ---
   if (!Array.isArray(imageList) || imageList.length === 0) {
@@ -33,8 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const fileCell = document.createElement('div');
   fileCell.className = 'image-filename';
   const link = document.createElement('a');
-  link.href = `/images/${encodeURIComponent(img[1])}`;
-  link.textContent = img[1];
+  link.href = `/images/${encodeURIComponent(img[1])}`;// --- Получаем уникальную часть ---
+  let fullFileName = img[1];
+  let uniqueName = fullFileName;
+  const lastUnderscore = fullFileName.lastIndexOf('_');
+  if (lastUnderscore !== -1) {
+    uniqueName = fullFileName.substring(lastUnderscore + 1);
+  }
+  link.textContent = uniqueName; // Показываем только уникальную часть
+    link.target = '_blank';
   link.target = '_blank';
   fileCell.appendChild(link);
 
@@ -98,6 +105,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     imagesTable.appendChild(row);
   });
+
+
+  // --- Логика пагинации (тоже только после загрузки DOM) ---
+  const prevBtn = document.getElementById('btn-prev');
+  const nextBtn = document.getElementById('btn-next');
+  // Проверяем что кнопки существуют
+  if (prevBtn && nextBtn) {
+    const pageNum = Number(document.getElementById('page-number').textContent);
+    const totalPages = Number(document.getElementById('total-pages').textContent);
+
+    // Отключаем на первой странице
+    if (pageNum <= 1) {
+      prevBtn.disabled = true;
+    }
+    // Отключаем на последней странице
+    if (pageNum >= totalPages) {
+      nextBtn.disabled = true;
+    }
+
+    // Переход назад
+    prevBtn.addEventListener('click', () => {
+      if (pageNum > 1) {
+        window.location.href = `/images-list?page=${pageNum - 1}`;
+      }
+    });
+    // Переход вперёд
+    nextBtn.addEventListener('click', () => {
+      if (pageNum < totalPages) {
+        window.location.href = `/images-list?page=${pageNum + 1}`;
+      }
+    });
+  }
 });
 
 

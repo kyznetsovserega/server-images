@@ -208,12 +208,58 @@ tabs {
   transition: opacity 0.2s ease, box-shadow 0.18s;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 0 0 1.5px #dde9fa;
+  box-shadow: 0 0 0 1px #ADC0F8;
 }
 .delete-icon:hover {
   opacity: 0.8;
-  box-shadow: 0 0 0 2px #b5cfff;
+  box-shadow: 0 0 0 2px #0060FF;
 }
+
+/* Кнопки пагинации */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.pagination-btn {
+  font-weight: 700;
+  font-size: 20px;
+  color: #0060FF;
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+/* Неактивные кнопки */
+.pagination-btn:disabled,
+.pagination-btn.disabled {
+  opacity: 0;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Ховер и фокус — инверсия цвета */
+.pagination-btn:hover:not(:disabled),
+.pagination-btn:focus-visible:not(:disabled) {
+  color: #fff;
+  background: #0060FF;
+  border: none;
+}
+
+/* Стили для номера страницы, "из" и общего количества страниц */
+#page-number, #total-pages, #page-of {
+  font-weight: 700;
+  font-size: 16px;
+  color: #0060FF;
+  background: none;
+  border: none;
+}
+
+
 
 /* --- Отсутствие изображения --- */
 .hidden { display: none !important; }
