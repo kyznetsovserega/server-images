@@ -6,7 +6,7 @@ import time
 
 load_dotenv()
 
-# Конфиг для подключения к PostgreSQL
+# --- Конфиг для подключения к PostgreSQL ---
 db_config = {
     "dbname" : os.getenv("DB_NAME"),
     "user":os.getenv("DB_USER"),
@@ -15,14 +15,14 @@ db_config = {
     "port":os.getenv("DB_PORT", "5432")
 }
 
-# Класс-менеджер для работы с БД
+# --- Класс-менеджер для работы с БД ---
 class PostgresManager:
     def __init__(self, config=db_config):
         self.config = config
         self.conn = None
         self.cur = None
 
-    # Открываем соединение с БД
+    # --- Открываем соединение с БД ---
     def __enter__(self):
         for i in range (10):
             try:
@@ -36,14 +36,14 @@ class PostgresManager:
         self.cur = self.conn.cursor()
         return self
 
-    # Закрываем соединение и курсор при выходе
+    # --- Закрываем соединение и курсор при выходе ---
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.cur:
             self.cur.close()
         if self.conn:
             self.conn.close()
 
-    # Создаем таблицу
+    # --- Создаем таблицу ---
     def create_table(self):
         self.cur.execute("""
             CREATE TABLE IF NOT EXISTS images (
@@ -58,7 +58,7 @@ class PostgresManager:
         self.conn.commit()
         logging.info("Таблица images проверена/создана.")
 
-    # Добавляем запись в таблицу images
+    # --- Добавляем запись в таблицу images ---
     def add_image(self, filename, original_name, size, file_type):
         try:
             self.cur.execute(
@@ -74,18 +74,18 @@ class PostgresManager:
             self.conn.rollback()
             logging.error(f"Ошибка добавления изображения: {e}")
 
-    # Получаем список всех или части изображений с поддержкой пагинации
+    # --- Получаем список всех или части изображений с поддержкой пагинации ---
     def get_images(self, limit=None, offset=None):
-        sql = ("""
+        sql = """
             SELECT id, filename, original_name, size, upload_time, file_type
             FROM images ORDER BY upload_time DESC
-            """)
+        """
         params = []
         if limit is not None:
-            sql += "LIMIT %s"
+            sql += " LIMIT %s"
             params.append(limit)
         if offset is not None:
-            sql += "OFFSET %s"
+            sql += " OFFSET %s"
             params.append(offset)
         self.cur.execute(sql, tuple(params))
         return self.cur.fetchall()
@@ -103,7 +103,7 @@ class PostgresManager:
     # Возвращает общее количество изображений для пагинации
     def get_image_count(self):
         self.cur.execute("SELECT COUNT(*) FROM images;")
-        return self.cur.fetchone() [0]
+        return self.cur.fetchone()[0]
 
 
 #  Тестовый вызов — для ручной проверки работы менеджера

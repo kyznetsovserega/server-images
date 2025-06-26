@@ -28,13 +28,9 @@
         <div class="column-type">Тип</div>
         <div class="column-delete">Удалить</div>
       </div>
-    <div class="images-table" id="imagesTable" data-images='{{ images | tojson | safe }}'></div>
+    <div class="images-table" id="imagesTable"></div>
     <div id="emptyMessage" class="hidden">Нет загруженных изображений.</div>
   </div>
-  <!-- Список изображений из backend -->
-  <script>
-    const imageList = {{ images | tojson | safe }};
-  </script>
   <!-- Кнопки пагинации -->
   <div class="pagination">
     <button id="btn-prev" class="pagination-btn">««</button>
@@ -43,6 +39,7 @@
     <span id="total-pages">{{ total_pages }}</span>
     <button id="btn-next" class="pagination-btn">»»</button>
   </div>
+
   <script src="{{ url_for('static', filename='js/images.js') }}"></script>
 </body>
 </html>
