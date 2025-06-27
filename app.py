@@ -2,8 +2,6 @@ from flask import Flask, request, render_template, url_for, redirect, jsonify, s
 from werkzeug.utils import secure_filename
 from typing import Optional
 from PIL import Image, UnidentifiedImageError
-import logging
-from logging.handlers import RotatingFileHandler
 import io
 import os
 import uuid
@@ -11,6 +9,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 from db_utils import PostgresManager
+from log_utils import setup_logging, log_action
 
 load_dotenv()
 
@@ -52,34 +51,7 @@ os.makedirs(LOG_FOLDER, exist_ok=True)
 os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
 # --- Настройка логирования ---
-log_file = os.path.join(LOG_FOLDER, 'app.log')
-log_handler = RotatingFileHandler(log_file, maxBytes=2_000_000, encoding='utf-8')
-log_formatter = logging.Formatter(
-    '[%(asctime)s] %(levelname)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-log_handler.setFormatter(log_formatter)
-
-root_logger = logging.getLogger()
-if not root_logger.handlers:
-    root_logger.addHandler(log_handler)
-    root_logger.setLevel(logging.INFO)
-
-
-# --- Унифицированное логирование ---
-def log_action(message: str, level: str = "info"):
-    prefix = {
-        "info": "Успех",
-        "error": "Ошибка",
-        "warning": "Внимание"
-    }.get(level.lower(), "Успех")
-    if level == "error":
-        logging.error(f"{prefix}: {message}")
-    elif level == "warning":
-        logging.warning(f"{prefix}: {message}")
-    else:
-        logging.info(f"{prefix}: {message}")
-
+setup_logging(LOG_FOLDER, 'app.log')
 
 log_action("Сервер запущен.")
 
@@ -91,18 +63,6 @@ def format_upload_time(dt):
     if isinstance(dt, str):
         return dt[:19]
     return ''
-
-
-# --- Создание таблицы images при запуске ---
-def init_db_if_needed():
-    try:
-        with PostgresManager() as db:
-            db.create_table()
-            log_action("Таблица images проверена/создана.", level="info")  # <-- Теперь видно и в консоли, и стиль один
-            print("Таблица images проверена/создана.")
-    except Exception as ex:
-        log_action(f"Ошибка при создании таблицы images: {ex}", level="error")
-        print(f"Ошибка при создании таблицы images: {ex}")
 
 
 # --- Проверка допустимого расширения файла ---
@@ -396,6 +356,5 @@ def serve_image(filename):
 
 # --- Запуск сервера ---
 if __name__ == '__main__':
-    init_db_if_needed()
     log_action(f"Запуск на http://0.0.0.0:8000")
     app.run(host='0.0.0.0', port=8000, debug=os.environ.get("FLASK_ENV") == "development")

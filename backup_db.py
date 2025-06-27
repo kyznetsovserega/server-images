@@ -1,11 +1,11 @@
 import os
 from datetime import datetime
-import logging
 from dotenv import load_dotenv
+from log_utils import setup_logging, log_action
 
 load_dotenv()
 
-logging.basicConfig(filename='logs/app.log', level=logging.INFO, encoding='utf-8')
+setup_logging('logs', 'app.log')
 
 # --- Переменные окружения / параметры ---
 CONTAINER = "pg_database"
@@ -21,6 +21,8 @@ backup_path = os.path.join(BACKUP_DIR, backup_name)
 cmd = f'docker exec -t {CONTAINER} pg_dump -U {DB_USER} {DB_NAME} > {backup_path}'
 result = os.system(cmd)
 if result == 0:
-    logging.info(f"Бэкап сохранён : {backup_name}")
+    log_action(f"Бэкап сохранён : {backup_name}")
+    print(f"Бэкап сохранён : {backup_name}")
 else:
-    logging.error(f"ОШИБКА при создании бэкапа : {backup_name}")
+    log_action(f"ОШИБКА при создании бэкапа : {backup_name}")
+    print(f"ОШИБКА при создании бэкапа : {backup_name}")

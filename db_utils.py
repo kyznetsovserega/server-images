@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 import os
 import psycopg2
-import logging
 import time
+from log_utils import log_action, setup_logging
 
 load_dotenv()
 
@@ -33,7 +33,7 @@ class PostgresManager:
                 self.cur = self.conn.cursor()
                 break
             except psycopg2.OperationalError as ex:
-                logging.warning(f"[DB] Postgres не готов, попытка {i + 1}/10: {ex}")
+                log_action(f"[DB] Postgres не готов, попытка {i + 1}/10: {ex}")
                 time.sleep(2)
         else:
             raise RuntimeError("Не удалось подключиться к Postgres после 10 попыток")
@@ -60,10 +60,10 @@ class PostgresManager:
                     );
             """)
             self.conn.commit()
-            logging.info("Таблица images проверена/создана.")
+            log_action("Таблица images проверена/создана.")
         except Exception as ex:
             self.conn.rollback()
-            logging.error(f"Ошибка создания таблицы images: {ex}")
+            log_action(f"Ошибка создания таблицы images: {ex}")
 
     # --- Добавляем запись в таблицу images ---
     def add_image(self, filename, original_name, size, file_type):
@@ -76,10 +76,10 @@ class PostgresManager:
                 (filename, original_name, size, file_type)
             )
             self.conn.commit()
-            logging.info(f"Image {filename} добавлено в базу.")
+            log_action(f"Image {filename} добавлено в базу.")
         except Exception as e:
             self.conn.rollback()
-            logging.error(f"Ошибка добавления изображения: {e}")
+            log_action(f"Ошибка добавления изображения: {e}")
 
     # --- Получаем список всех или части изображений с поддержкой пагинации ---
     def get_images(self, limit=None, offset=None):
@@ -98,7 +98,7 @@ class PostgresManager:
             self.cur.execute(sql, tuple(params))
             return self.cur.fetchall()
         except Exception as ex:
-            logging.error(f"Ошибка выборки изображений: {ex}")
+            log_action(f"Ошибка выборки изображений: {ex}")
             return []
 
     # Удаление записи об изображении по id и возвращает имя файла для удаления с диска
@@ -113,7 +113,7 @@ class PostgresManager:
             return None
         except Exception as ex:
             self.conn.rollback()
-            logging.error(f"Ошибка удаления изображения: {ex}")
+            log_action(f"Ошибка удаления изображения: {ex}")
             return None
 
     # Возвращает общее количество изображений для пагинации
@@ -122,13 +122,13 @@ class PostgresManager:
             self.cur.execute("SELECT COUNT(*) FROM images;")
             return self.cur.fetchone()[0]
         except Exception as ex:
-            logging.error(f"Ошибка подсчёта изображений: {ex}")
+            log_action(f"Ошибка подсчёта изображений: {ex}")
             return 0
 
 
 #  Тестовый вызов — для ручной проверки работы менеджера
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    setup_logging('logs', 'app.log')
     with PostgresManager() as db:
         db.create_table()
         print("Таблица проверена/создана!")

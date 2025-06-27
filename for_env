@@ -1,0 +1,9 @@
+# --- PostgreSQL ---
+DB_NAME=server_images_db
+DB_USER=server_images_user
+DB_PASSWORD=1
+DB_HOST=db
+DB_PORT=5432
+
+# --- Flask ---
+SECRET_KEY=1

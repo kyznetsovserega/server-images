@@ -25,10 +25,26 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5434:5432"
+      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./backups:/backups
+
+  # Инициализация БД — запускается один раз
+  init_db:
+    build: .
+    container_name: init_db
+    command: python init_db.py
+    depends_on:
+      - db
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: 5432
+    volumes:
+      - ./logs:/app/logs
 
   nginx:
     image: nginx:alpine

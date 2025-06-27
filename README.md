@@ -33,6 +33,9 @@
     ```bash
     cp .env.example .env
     ```
+   (временный файл "for_env")
+
+
 4. **Запустите проект в Docker:**
     ```bash
     docker compose up --build
@@ -41,6 +44,9 @@
     - Интерфейс и загрузка: [http://localhost:8080](http://localhost:8080)
     - Прямая ссылка на файл: [http://localhost:8080/images/<имя_файла>](http://localhost:8080/images/<имя_файла>)
     - (Для отладки: Flask — [http://localhost:8000](http://localhost:8000))
+
+
+- Все таблицы создаются автоматически при первом запуске через отдельный сервис init_db.
 
 ---
 
@@ -52,6 +58,8 @@ server-images/
 ├── app.py                # Основной backend на Flask
 ├── backup_db.py          # Скрипт для резервного копирования БД
 ├── db_utils.py           # Модуль для управления базой данных PostgreSQL
+├── log_utils.py           # Централизованный модуль для логирования (rotating logs, форматирование, utf-8)
+├── init_db.py            # Автоматическая инициализация структуры таблиц БД через Docker Compose
 ├── Dockerfile            # Docker-образ приложения
 ├── docker-compose.yml    # Оркестрация сервисов (Flask, Nginx, PostgreSQL)
 ├── nginx.conf            # Конфиг для Nginx (reverse proxy + статика)
@@ -81,12 +89,12 @@ server-images/
 │   └── images-list.html  # Список/галерея изображений
 │
 └── README.md             # Описание и инструкция по проекту
-
+```
 
 ---
 
 ## API-маршруты
-
+```
 | Endpoint                | Метод     | Описание                                  |
 |-------------------------|-----------|-------------------------------------------|
 | `/`                     | GET       | Главная страница                          |
@@ -95,10 +103,13 @@ server-images/
 | `/images/<имя_файла>`   | GET       | Просмотр/скачивание изображения           |
 | `/delete/<id>`          | POST      | Удаление изображения по ID                |
 
+
+```
 ---
 
 ## Структура таблицы `images` (PostgreSQL)
 
+```
 ```sql
 CREATE TABLE images (
     id SERIAL PRIMARY KEY,
@@ -109,6 +120,7 @@ CREATE TABLE images (
     file_type TEXT NOT NULL        -- Формат 
 );
 
+```
 ---
 
 
@@ -125,15 +137,15 @@ CREATE TABLE images (
 ## Бэкап и восстановление базы данных
 
 Создать резервную копию:
-
+```bash
 python backup_db.py
-
-Бэкап-файл появится в папке /backups
+```
+- Бэкап-файл появится в папке /backups
 
 Восстановить из бэкапа:
-
+```bash
 docker exec -i pg_database psql -U server_images_user server_images_db < backups/<имя_файла>
-
+```
 
 ---
 
