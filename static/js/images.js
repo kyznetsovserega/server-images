@@ -12,12 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Функция для загрузки и отображения изображений через API ---
   async function loadImages(page = 1) {
     try {
-      // Запрашиваем API
+      // --- Запрашиваем API ---
       const response = await fetch(`/api/images-list?page=${page}`);
       if (!response.ok) throw new Error('Ошибка загрузки изображений');
       const data = await response.json();
 
-      // Данные с сервера
+      // --- Данные с сервера ---
       const { images, page: serverPage, total_pages } = data;
 
       // --- Обновляем пагинацию в DOM ---
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
           try {
             const res = await fetch(`/delete/${img[0]}?page=${currentPage}`, { method: 'POST' });
             if (res.ok) {
-              // --- После удаления — перезагружаем актуальную страницу ---
+              // После удаления — перезагружаем актуальную страницу
               await loadImages(currentPage);
             } else {
               alert('Не удалось удалить изображение.');

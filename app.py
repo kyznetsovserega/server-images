@@ -18,6 +18,9 @@ load_dotenv()
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 МБ
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
 
+# --- Количество изображений ---
+PER_PAGE = 5 # <-- уменьшил до 5, для полного отображения на экране
+
 
 # ---Проверка запуска проекта в Docker ---
 def is_docker():
@@ -32,11 +35,11 @@ def is_docker():
 if is_docker():
     UPLOAD_FOLDER = '/app/images'
     LOG_FOLDER = '/app/logs'
-    BACKUP_FOLDER = '/app/backups_old'
+    BACKUP_FOLDER = '/app/backups'
 else:
     UPLOAD_FOLDER = 'images'
     LOG_FOLDER = 'logs'
-    BACKUP_FOLDER = 'backups_old'
+    BACKUP_FOLDER = 'backups'
 
 # --- Инициализация Flask ---
 app = Flask(__name__)
@@ -58,9 +61,9 @@ log_formatter = logging.Formatter(
 log_handler.setFormatter(log_formatter)
 
 root_logger = logging.getLogger()
-root_logger.handlers.clear()
-root_logger.addHandler(log_handler)
-root_logger.setLevel(logging.INFO)
+if not root_logger.handlers:
+    root_logger.addHandler(log_handler)
+    root_logger.setLevel(logging.INFO)
 
 
 # --- Унифицированное логирование ---
@@ -81,21 +84,32 @@ def log_action(message: str, level: str = "info"):
 log_action("Сервер запущен.")
 
 
+# --- Форматирование даты ---
+def format_upload_time(dt):
+    if isinstance(dt, datetime):
+        return dt.strftime('%Y-%m-%d %H:%M:%S')
+    if isinstance(dt, str):
+        return dt[:19]
+    return ''
+
+
 # --- Создание таблицы images при запуске ---
 def init_db_if_needed():
     try:
         with PostgresManager() as db:
             db.create_table()
-            logging.info("Таблица images проверена/создана.")
+            log_action("Таблица images проверена/создана.", level="info")  # <-- Теперь видно и в консоли, и стиль один
             print("Таблица images проверена/создана.")
     except Exception as ex:
-        logging.info(f"Ошибка при создании таблицы images: {ex}")
+        log_action(f"Ошибка при создании таблицы images: {ex}", level="error")
         print(f"Ошибка при создании таблицы images: {ex}")
 
 
 # --- Проверка допустимого расширения файла ---
 def allowed_file(filename: str) -> bool:
     ext = os.path.splitext(filename)[1].lower().strip(".")
+    if not ext:
+        return False
     return ext in ALLOWED_EXTENSIONS
 
 
@@ -135,6 +149,21 @@ def validate_file(file) -> Optional[str]:
     return None
 
 
+# --- Глобальные error handler для API ---
+@app.errorhandler(404)
+def not_found_error(_error):
+    if request.path.startswith('/api/'):
+        return jsonify({'error': 'Не найдено'}), 404
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_error(_error):
+    if request.path.startswith('/api/'):
+        return jsonify({'error': 'Внутренняя ошибка сервера'}), 500
+    return render_template('500.html'), 500
+
+
 # --- Главная страница ---
 @app.route('/')
 def home():
@@ -159,7 +188,7 @@ def handle_upload():
         error = validate_file(file)
         if error:
             log_action(error, level="error")
-            return jsonify({'error': error}), 400
+            return jsonify({'error': error, 'status': 'fail'}), 415 if "формат" in error.lower() else 400
 
         filename = secure_filename(file.filename)
         unique_filename = generate_unique_filename(filename)
@@ -189,11 +218,16 @@ def handle_upload():
             return jsonify({'error': 'Ошибка сохранения в базе'}), 500
 
         log_action(f"изображение {unique_filename} загружено.")
-        return jsonify({'url': f"/images/{unique_filename}"})
+        return jsonify({
+            'url': f"/images/{unique_filename}",
+            'filename': unique_filename,
+            'status': 'success'
+        }), 200
 
     return render_template('upload_photos.html', images=[])
 
-#--- API endpoint для динамического получения списка изображений ---
+
+# --- API endpoint для динамического получения списка изображений ---
 @app.route('/api/images-list')
 def api_images_list():
     try:
@@ -203,7 +237,7 @@ def api_images_list():
     except ValueError:
         page = 1
 
-    per_page = 5
+    per_page = PER_PAGE
     offset = (page - 1) * per_page
 
     try:
@@ -220,22 +254,17 @@ def api_images_list():
 
     formatted_images = []
     for img in images:
-        dt = img[4]
-        if isinstance(dt, datetime):
-            upload_time_str = dt.strftime('%Y-%m-%d %H:%M:%S')
-        elif isinstance(dt, str):
-            upload_time_str = dt[:19]
-        else:
-            upload_time_str = ''
+        upload_time_str = format_upload_time(img[4])
         formatted_images.append(
             (img[0], img[1], img[2], img[3], upload_time_str, img[5])
         )
-    # --- Возвращаем JSON для фронта ---
+
     return jsonify({
         'images': formatted_images,
         'page': page,
         'total_pages': max(1, (total + per_page - 1) // per_page)
     })
+
 
 # --- Галерея изображений ---
 @app.route('/images-list')
@@ -247,7 +276,7 @@ def images_list():
     except ValueError:
         page = 1
 
-    per_page = 5
+    per_page = PER_PAGE
     offset = (page - 1) * per_page
 
     try:
@@ -271,19 +300,13 @@ def images_list():
         log_action(f"Ошибка при получении списка изображений: {ex}", level="error")
         images, total, total_pages = [], 0, 1
 
-    # --- Пересчёт total_pages после получения изображений ---
+    # Пересчёт total_pages после получения изображений
     total_pages = (total + per_page - 1) // per_page  # Количество страниц
 
     # --- Формируем дату ---
     formatted_images = []
     for img in images:
-        dt = img[4]
-        if isinstance(dt, datetime):
-            upload_time_str = dt.strftime('%Y-%m-%d %H:%M:%S')
-        elif isinstance(dt, str):
-            upload_time_str = dt[:19]
-        else:
-            upload_time_str = ''
+        upload_time_str = format_upload_time(img[4])
         formatted_images.append(
             (img[0], img[1], img[2], img[3], upload_time_str, img[5])
         )
@@ -300,7 +323,7 @@ def images_list():
 @app.route('/delete/<int:image_id>', methods=['POST'])
 def delete_image(image_id):
     page = int(request.args.get('page', 1))
-    per_page = 5
+    per_page = PER_PAGE
 
     log_action(f"[DELETE] Запрос на удаление image_id={image_id} со страницы page={page}", level="info")
     try:
@@ -311,7 +334,7 @@ def delete_image(image_id):
             total_files = len(image_ids)
             log_action(f"[DELETE] Всего файлов до удаления: {total_files}. Все id: {image_ids}", level="info")
 
-            # --- Находим индекс удаляемого файла ---
+            # Находим индекс удаляемого файла
             try:
                 idx = image_ids.index(image_id)
                 log_action(f"[DELETE] Индекс удаляемого файла: {idx}", level="info")
@@ -319,28 +342,32 @@ def delete_image(image_id):
                 idx = None
                 log_action(f"[DELETE] Файл с id={image_id} не найден в списке image_ids!", level="error")
 
-            # --- Удаляем файл из базы и с диска ---
+            # Удаляем файл из базы и с диска
             filename = db.delete_image(image_id)
             log_action(f"[DELETE] После db.delete_image: filename={filename}", level="info")
             if filename:
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 if os.path.exists(filepath):
-                    os.remove(filepath)
-                    log_action(f"[DELETE] Файл {filename} удалён с диска.", level="info")
+                    try:
+                        os.remove(filepath)
+                        log_action(f"[DELETE] Файл {filename} удалён с диска.", level="info")
+                    except Exception as ex:
+                        log_action(f"[DELETE] Ошибка при удалении файла {filename}: {ex}", level="error")
                 else:
                     log_action(f"[DELETE] Файл {filename} не найден на диске для удаления.", level="warning")
             else:
                 log_action(f"[DELETE] Файл с id {image_id} не найден в базе для удаления", level="error")
 
-            # --- После удаления — сдвигаем все следующие файлы вперед ---
+            # После удаления — сдвигаем все следующие файлы вперед
             if idx is not None and idx < total_files - 1:
-                log_action(f"[DELETE] (Логика сдвига) Физически ничего не делаем — уплотнение произойдет при рендере (LIMIT/OFFSET).", level="info")
+                log_action(f"[DELETE] (Логика сдвига) Уплотнение произойдет при рендере (LIMIT/OFFSET).", level="info")
 
-            # --- После удаления вычисляем новое количество файлов ---
+            # После удаления - вычисляем новое количество файлов
             new_total = db.get_image_count()
             last_page = max(1, (new_total + per_page - 1) // per_page)
-            log_action(f"[DELETE] Файлов после удаления: {new_total}, last_page={last_page}, текущая страница={page}", level="info")
-            # --- Проверяем, остались ли файлы на текущей странице, если нет — редиректим на предыдущую ---
+            log_action(f"[DELETE] Файлов после удаления: {new_total}, last_page={last_page}, текущая страница={page}",
+                       level="info")
+            # Проверяем, остались ли файлы на текущей странице
             offset = (page - 1) * per_page
             images_after = db.get_images(limit=per_page, offset=offset)
             if not images_after and page > 1:
@@ -349,7 +376,8 @@ def delete_image(image_id):
                 page = page - 1
 
             if page > last_page:
-                log_action(f"[DELETE] Перенаправляем пользователя на последнюю существующую страницу {last_page}", level="info")
+                log_action(f"[DELETE] Перенаправляем пользователя на последнюю существующую страницу {last_page}",
+                           level="info")
                 page = last_page
 
     except Exception as ex:
@@ -370,4 +398,4 @@ def serve_image(filename):
 if __name__ == '__main__':
     init_db_if_needed()
     log_action(f"Запуск на http://0.0.0.0:8000")
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=os.environ.get("FLASK_ENV") == "development")

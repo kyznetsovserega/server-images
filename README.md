@@ -1,37 +1,46 @@
 # Сервер Картинок (Image Server) v2.0
 
-Веб-приложение для загрузки, хранения и просмотра изображений.
-Пользователь может загрузить `.jpg`, `.jpeg`,`.png` или `.gif` до 5 МБ и получить прямую ссылку на изображение.
+**Web-приложение для загрузки, хранения и просмотра изображений с прямыми ссылками.**
+
+- Хранение метаданных — PostgreSQL  
+- Файлы отдает Nginx  
+- Контейнеризация — Docker + Docker Compose  
+- Поддержка форматов: `.jpg`, `.jpeg`, `.png`, `.gif` до 5 МБ
 
 ---
 
 ## Технологии
 
-- **Python 3.12 + Flask** — серверная логика
-- **Gunicorn** — продакшен-WGI сервер для многопроцессной обработки
-- **Nginx** — отдача изображений и проксирование API
-- **Docker & Docker Compose** — развёртывание и масштабирование
-- **PostgreSQL** — хранение метаданных
-- **Pillow** — валидация подлинности и формата изображений
+- **Python 3.12, Flask** — backend, REST API
+- **Gunicorn** — production WSGI server
+- **PostgreSQL** — хранение метаданных изображений
+- **Pillow** — валидация и обработка файлов
+- **Nginx** — отдача файлов и проксирование API
+- **Docker & Docker Compose** — контейнеризация, масштабирование
 
 ---
 
 ## Быстрый старт
 
-1. **Установи** [Docker](https://docs.docker.com/get-docker/) и [Docker Compose](https://docs.docker.com/compose/)
-2. **Склонируй репозиторий**:
+1. **Установите** [Docker](https://docs.docker.com/get-docker/) и [Docker Compose](https://docs.docker.com/compose/).
+2. **Клонируйте репозиторий:**
     ```bash
     git clone https://github.com/kyznetsovserega/server-images.git
     cd server-images
+    git checkout v-2.0
     ```
-3. **Запусти проект**:
+3. **Создайте файл `.env` :** 
+    ```bash
+    cp .env.example .env
+    ```
+4. **Запустите проект в Docker:**
     ```bash
     docker compose up --build
     ```
-4. **Открой**:
-    - Главная страница и загрузка: [http://localhost:8080](http://localhost:8080)
-    - Прямая ссылка на изображение: [http://localhost:8080/images/<имя_файла>](http://localhost:8080/images/<имя_файла>)
-    - (Только для отладки: Flask-бэкенд — [http://localhost:8000](http://localhost:8000))
+5. **Откройте в браузере:**
+    - Интерфейс и загрузка: [http://localhost:8080](http://localhost:8080)
+    - Прямая ссылка на файл: [http://localhost:8080/images/<имя_файла>](http://localhost:8080/images/<имя_файла>)
+    - (Для отладки: Flask — [http://localhost:8000](http://localhost:8000))
 
 ---
 
@@ -39,65 +48,91 @@
 
 ```
 server-images/
-├── app.py                # Flask backend 
-├── Dockerfile            # Docker-образ backend
-├── docker-compose.yml    # Сервисы Flask + Nginx
-├── nginx.conf            # Конфиг Nginx
+│
+├── app.py                # Основной backend на Flask
+├── backup_db.py          # Скрипт для резервного копирования БД
+├── db_utils.py           # Модуль для управления базой данных PostgreSQL
+├── Dockerfile            # Docker-образ приложения
+├── docker-compose.yml    # Оркестрация сервисов (Flask, Nginx, PostgreSQL)
+├── nginx.conf            # Конфиг для Nginx (reverse proxy + статика)
 ├── requirements.txt      # Python-зависимости
-├── .dockerignore         # Исключения для Docker
-├── .gitignore            # Исключения для git
-├── README.md             # Документация проекта
-├── backup_db.py # Скрипт резервного копирования БД
-├── templates/            # HTML-шаблоны
-│   ├── index.html            # Главная страница
-│   ├── upload_photos.html    # Загрузка изображений
-│   └── images.html           # Просмотр файлов
-├── static/               # Статика (CSS, JS, картинки)
-│   ├── css/                  # Стили
-│   ├── js/                   # Скрипты
-│   └── img_project/          # Картинки интерфейса
-├── images/               # [volume] Все загруженные пользователями изображения 
-├── logs/                 # [volume] Логи работы приложения и nginx 
+├── .env                  # Переменные окружения 
+├── .gitignore            # Исключения для git-репозитория
+├── .dockerignore         # Исключения для Docker-контекста
+│
+├── backups/              # [volume] Бэкапы базы данных
+│   └── .gitkeep
+├── images/               # [volume] Загруженные пользователями изображения
+│   └── .gitkeep
+├── logs/                 # [volume] Логи приложения и nginx
+│   └── .gitkeep
+│
+├── static/               # Статические файлы (frontend)
+│   ├── favicon.ico
+│   ├── img_project/      # Картинки интерфейса (иконки, фоны)
+│   │   ├── icon_image/   # SVG-иконки для кнопок/статусов
+│   │   └── images_background/   # Фоновые изображения
+│   ├── css/              # Стили (отдельно для каждой страницы)
+│   └── js/               # JS-скрипты фронтенда
+│
+├── templates/            # HTML-шаблоны 
+│   ├── index.html        # Главная страница
+│   ├── upload_photos.html # Интерфейс загрузки файлов
+│   └── images-list.html  # Список/галерея изображений
+│
+└── README.md             # Описание и инструкция по проекту
 
-```
-
-
-
-##  Маршруты (эндпоинты)
-
-| Endpoint                | Метод     | Описание                                        |
-|-------------------------|-----------|-------------------------------------------------|
-| `/`                     | GET       | Главная страница                                |
-| `/upload`               | GET/POST  | Загрузка изображений                            |
-| `/images-list`          | GET       | Список изображений с пагинацией                 |
-| `/images/<имя_файла>`   | GET       | Просмотр/скачивание изображения                 |
-| `/delete/<id>`          | POST      | Удаление изображения по ID                      |
 
 ---
 
-## Структура таблицы images (PostgreSQL)
+## API-маршруты
+
+| Endpoint                | Метод     | Описание                                  |
+|-------------------------|-----------|-------------------------------------------|
+| `/`                     | GET       | Главная страница                          |
+| `/upload`               | GET/POST  | Форма и процесс загрузки                  |
+| `/images-list`          | GET       | Список изображений с пагинацией           |
+| `/images/<имя_файла>`   | GET       | Просмотр/скачивание изображения           |
+| `/delete/<id>`          | POST      | Удаление изображения по ID                |
+
+---
+
+## Структура таблицы `images` (PostgreSQL)
 
 ```sql
 CREATE TABLE images (
     id SERIAL PRIMARY KEY,
-    filename TEXT NOT NULL,           -- Сгенерированное уникальное имя файла
-    original_name TEXT NOT NULL,      -- Имя, присланное пользователем
-    size INTEGER NOT NULL,            -- Размер в байтах
+    filename TEXT NOT NULL,        -- Уникальное имя на сервере
+    original_name TEXT NOT NULL,   -- Оригинальное имя файла
+    size INTEGER NOT NULL,         -- Размер (байт)
     upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    file_type TEXT NOT NULL           -- Формат файла (jpg, png и т.д.)
+    file_type TEXT NOT NULL        -- Формат 
 );
-
 
 ---
 
 
 ## Безопасность
 
-- **Только поддерживаемые форматы:** `.jpg`, `.jpeg`, `.png`, `.gif`
-- **Ограничение размера:** до 5 МБ на файл
-- **Проверка содержимого:** валидация через Pillow 
-- **Nginx:** Разрешены только методы `GET` и `POST` 
-- **HTTP-заголовки защиты**
+- Только поддерживаемые форматы: .jpg, .jpeg, .png, .gif
+- Ограничение размера: до 5 МБ на файл
+- Проверка содержимого через Pillow
+- Nginx: только методы GET и POST
+- HTTP-заголовки защиты (XSS, clickjacking)
+
+---
+
+## Бэкап и восстановление базы данных
+
+Создать резервную копию:
+
+python backup_db.py
+
+Бэкап-файл появится в папке /backups
+
+Восстановить из бэкапа:
+
+docker exec -i pg_database psql -U server_images_user server_images_db < backups/<имя_файла>
 
 
 ---
@@ -109,16 +144,6 @@ CREATE TABLE images (
 - Отдача изображения через Nginx — менее 0.1 сек
 
 ---
-## Бэкап и восстановление базы данных
-
-python backup_db.py
-
-Бэкап-файл появится в папке /backups, например: backup_2025-06-25_160130.sql.
-
-## Инструкция по восстановлению бэкапа!!!
-
-docker exec -i pg_database psql -U server_images_user server_images_db < backups/<имя_файла>
-
 
 
 ## 👤 Автор
