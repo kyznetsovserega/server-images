@@ -76,10 +76,10 @@ class PostgresManager:
                 (filename, original_name, size, file_type)
             )
             self.conn.commit()
-            log_action(f"Image {filename} добавлено в базу.")
+            print(f"Image {filename} добавлено в базу.")
         except Exception as e:
             self.conn.rollback()
-            log_action(f"Ошибка добавления изображения: {e}")
+            print(f"Ошибка добавления изображения: {e}")
 
     # --- Получаем список всех или части изображений с поддержкой пагинации ---
     def get_images(self, limit=None, offset=None):

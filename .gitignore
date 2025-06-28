@@ -21,7 +21,3 @@ __pycache__/
 images/
 logs/
 
-#Тесты
-upload.ps1
-upload.sh
-image.jpg

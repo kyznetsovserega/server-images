@@ -26,11 +26,6 @@ Thumbs.db
 dist/
 build/
 
-#Тесты
-upload.ps1
-upload.sh
-image.jpg
-
 # Логи и временные файлы
 logs/
 *.log

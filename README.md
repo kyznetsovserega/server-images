@@ -58,18 +58,18 @@ server-images/
 ├── app.py                # Основной backend на Flask
 ├── backup_db.py          # Скрипт для резервного копирования БД
 ├── db_utils.py           # Модуль для управления базой данных PostgreSQL
-├── log_utils.py           # Централизованный модуль для логирования (rotating logs, форматирование, utf-8)
+├── log_utils.py          # Централизованный модуль для логирования (rotating logs, форматирование, utf-8)
 ├── init_db.py            # Автоматическая инициализация структуры таблиц БД через Docker Compose
 ├── Dockerfile            # Docker-образ приложения
 ├── docker-compose.yml    # Оркестрация сервисов (Flask, Nginx, PostgreSQL)
 ├── nginx.conf            # Конфиг для Nginx (reverse proxy + статика)
 ├── requirements.txt      # Python-зависимости
-├── .env                  # Переменные окружения 
+├── .env                  # Переменные окружения (for_env)
 ├── .gitignore            # Исключения для git-репозитория
 ├── .dockerignore         # Исключения для Docker-контекста
 │
 ├── backups/              # [volume] Бэкапы базы данных
-│   └── .gitkeep
+│   
 ├── images/               # [volume] Загруженные пользователями изображения
 │   └── .gitkeep
 ├── logs/                 # [volume] Логи приложения и nginx
@@ -83,10 +83,16 @@ server-images/
 │   ├── css/              # Стили (отдельно для каждой страницы)
 │   └── js/               # JS-скрипты фронтенда
 │
-├── templates/            # HTML-шаблоны 
-│   ├── index.html        # Главная страница
+├── templates/             # HTML-шаблоны 
+│   ├── index.html         # Главная страница
 │   ├── upload_photos.html # Интерфейс загрузки файлов
-│   └── images-list.html  # Список/галерея изображений
+│   └── images-list.html   # Список/галерея изображений
+│
+├── tests/                         # Тесты производительности
+│   ├── test_image.jpg
+│   ├── test_upload_one.py        # Проверка загрузки одного изображения   
+│   ├── test_upload_parallel.py   # Проверка 10 параллельных загрузок        
+│   └── test_nginx_server.py      # Проверка скорости отдачи изображения через Nginx      
 │
 └── README.md             # Описание и инструкция по проекту
 ```
@@ -152,8 +158,21 @@ docker exec -i pg_database psql -U server_images_user server_images_db < backups
 ## Тесты производительности 
 
 - Загрузка 1 изображения — менее 1 сек
+
+```bash
+python tests/test_upload_one.py
+```
+
 - 10 параллельных загрузок — менее 1 сек
+
+```bash
+python tests/test_upload_parallel.py
+```
+
 - Отдача изображения через Nginx — менее 0.1 сек
+```bash
+ python tests/test_nginx_server.py
+```
 
 ---
 
