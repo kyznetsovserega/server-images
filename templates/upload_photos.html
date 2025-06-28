@@ -5,8 +5,9 @@
   <!-- Установка масштаба страницы для адаптивности на мобильных устройствах -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Upload Photos</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style_upload_photos.css') }}"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="hero">
@@ -16,7 +17,7 @@
       <!-- Навигационные вкладки -->
       <div class="tabs">
         <a href="{{ url_for('handle_upload') }}" class="tab active" id="uploadTab">Upload</a>
-        <a href="{{ url_for('show_gallery') }}" class="tab" id="imagesTab">Images</a>
+        <a href="{{ url_for('images_list') }}" class="tab" id="imagesTab">Images</a>
       </div>
       <!-- Зона drag-and-drop загрузки -->
       <div class="upload-box">
