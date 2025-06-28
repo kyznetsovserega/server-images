@@ -177,7 +177,7 @@ python tests/test_upload_parallel.py
 ---
 
 
-## 👤 Автор
+## Автор
 
 Сергей Кузнецов  
 [GitHub — @kyznetsovserega](https://github.com/kyznetsovserega)
