@@ -2,7 +2,11 @@
 .idea/
 .vscode/
 .venv/
+venv/
+env/
+.env
 .DS_Store
+Thumbs.db
 *.iml
 
 # Python служебные файлы
@@ -10,14 +14,23 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.so
+*.dll
+*.exe
 
 # Логи, базы, прочие временные файлы
 *.log
 *.sqlite3
 *.db
-.env
+.coverage
+htmlcov/
+.pytest_cache/
 
 # Project volumes (каталоги для Docker)
 images/
 logs/
+volume/
+
+# Jupyter notebooks
+*.ipynb
 

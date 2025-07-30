@@ -18,7 +18,7 @@ MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 МБ
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
 
 # --- Количество изображений ---
-PER_PAGE = 5 # <-- уменьшил до 5, для полного отображения на экране
+PER_PAGE = 5  # <-- уменьшил до 5, для полного отображения на экране
 
 
 # ---Проверка запуска проекта в Docker ---
@@ -39,6 +39,7 @@ else:
     UPLOAD_FOLDER = 'images'
     LOG_FOLDER = 'logs'
     BACKUP_FOLDER = 'backups'
+
 
 # --- Инициализация Flask ---
 app = Flask(__name__)
@@ -109,13 +110,12 @@ def validate_file(file) -> Optional[str]:
     return None
 
 
-# --- Глобальные error handler для API ---
+# --- Обработка ошибок для API (404/500) ---
 @app.errorhandler(404)
 def not_found_error(_error):
     if request.path.startswith('/api/'):
         return jsonify({'error': 'Не найдено'}), 404
     return render_template('404.html'), 404
-
 
 @app.errorhandler(500)
 def internal_error(_error):
@@ -148,6 +148,7 @@ def handle_upload():
         error = validate_file(file)
         if error:
             log_action(error, level="error")
+            # Если формат не тот — ошибка 415, иначе 400
             return jsonify({'error': error, 'status': 'fail'}), 415 if "формат" in error.lower() else 400
 
         filename = secure_filename(file.filename)
@@ -219,14 +220,18 @@ def api_images_list():
             (img[0], img[1], img[2], img[3], upload_time_str, img[5])
         )
 
-    return jsonify({
+    # Логируем возвращаемый ответ API
+    response_obj = {
         'images': formatted_images,
         'page': page,
         'total_pages': max(1, (total + per_page - 1) // per_page)
-    })
+    }
+    log_action(f"[API] /api/images-list: Response: {response_obj}")
+
+    return jsonify(response_obj)
 
 
-# --- Галерея изображений ---
+# --- Страница галереи изображений с пагинацией ---
 @app.route('/images-list')
 def images_list():
     try:
@@ -279,7 +284,7 @@ def images_list():
     )
 
 
-# --- Удаление изображения по имени ---
+# --- Удаление изображения по id ---
 @app.route('/delete/<int:image_id>', methods=['POST'])
 def delete_image(image_id):
     page = int(request.args.get('page', 1))
@@ -350,7 +355,7 @@ def delete_image(image_id):
 
 # --- Отдача изображения ---
 @app.route('/images/<filename>')
-def serve_image(filename):
+def server_image(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 

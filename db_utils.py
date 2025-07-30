@@ -96,7 +96,10 @@ class PostgresManager:
             params.append(offset)
         try:
             self.cur.execute(sql, tuple(params))
-            return self.cur.fetchall()
+            rows = self.cur.fetchall()
+            # === [DEBUG: лог успешной выборки] ===
+            log_action(f"[DB] get_images: {len(rows)}строк выбрано", level="info")
+            return rows
         except Exception as ex:
             log_action(f"Ошибка выборки изображений: {ex}")
             return []

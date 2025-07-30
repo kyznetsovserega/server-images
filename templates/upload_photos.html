@@ -35,16 +35,12 @@
       <div class="current-upload">
         <p class="upload-label">Current Upload</p>
         <div class="upload-url">
-          <input type="text" value="https://" readonly/>
+          <input type="text" value="" readonly/>
           <button class="copy-btn">COPY</button>
         </div>
       </div>
     </div>
   </div>
-
-  <script>
-    const imageList = {{ images | tojson | safe | default('[]') }};
-  </script>
 
   <script src="{{ url_for('static', filename='js/upload_photos.js') }}"></script>
   <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>

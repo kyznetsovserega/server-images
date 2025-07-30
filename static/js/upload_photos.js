@@ -42,8 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const formData = new FormData();
       formData.append('image', file);
       const response = await fetch('/upload', { method: 'POST', body: formData });
-      const data = await response.json();
-
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        // Сервер не вернул JSON — выводим ошибку
+        showError('Server did not return JSON. Check backend.');
+        return;
+      }
       if (response.ok && data.url) {
         const url = `${window.location.origin}${data.url}`;
         inputField.value = url;
@@ -73,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     statusTitle.textContent = 'Upload failed';
     statusTitle.style.color = '#FF4C4C';
     infoText.textContent = message;
+    inputField.value = '';
   }
 
   // --- Сброс всех полей ---

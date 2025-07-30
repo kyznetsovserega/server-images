@@ -31,10 +31,19 @@
     ```
 3. **Создайте файл `.env` :** 
     ```bash
-    cp .env.example .env
+    Copy-Item for_env .env
     ```
    (временный файл "for_env")
 
+   Возможно нужна активация виртуального окружения:
+   ```bash
+   python -m venv venv
+   .\venv\Scripts\Activate.ps1
+   ```
+   Установите зависимости из файла requirements.txt:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 4. **Запустите проект в Docker:**
     ```bash
@@ -86,7 +95,9 @@ server-images/
 ├── templates/             # HTML-шаблоны 
 │   ├── index.html         # Главная страница
 │   ├── upload_photos.html # Интерфейс загрузки файлов
-│   └── images-list.html   # Список/галерея изображений
+│   ├── images-list.html   # Список/галерея изображений
+│   ├── 404.html
+│   └── 500.html
 │
 ├── tests/                         # Тесты производительности
 │   ├── test_image.jpg
@@ -118,13 +129,14 @@ server-images/
 ```
 ```sql
 CREATE TABLE images (
-    id SERIAL PRIMARY KEY,
-    filename TEXT NOT NULL,        -- Уникальное имя на сервере
-    original_name TEXT NOT NULL,   -- Оригинальное имя файла
-    size INTEGER NOT NULL,         -- Размер (байт)
-    upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    file_type TEXT NOT NULL        -- Формат 
+    id SERIAL PRIMARY KEY,              -- Уникальный идентификатор (INTEGER)
+    filename TEXT NOT NULL,             -- Имя файла, сгенерированное на сервере 
+    original_name TEXT NOT NULL,        -- Исходное имя, с которым пользователь загрузил файл
+    size INTEGER NOT NULL,              -- Размер файла в байтах 
+    upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Время загрузки, по умолчанию текущее
+    file_type TEXT NOT NULL             -- Тип/расширение файла 
 );
+
 
 ```
 ---
@@ -149,7 +161,7 @@ python backup_db.py
 - Бэкап-файл появится в папке /backups
 
 Восстановить из бэкапа:
-```bash
+```
 docker exec -i pg_database psql -U server_images_user server_images_db < backups/<имя_файла>
 ```
 

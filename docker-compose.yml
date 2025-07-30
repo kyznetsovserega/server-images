@@ -7,7 +7,7 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - for_env
     volumes:
       - ./images:/app/images
       - ./logs:/app/logs
@@ -60,8 +60,8 @@ services:
     restart: unless-stopped
 
 volumes:
-  images:
-  logs:
+  #images:
+  #logs:
   db_data:
-  backups:
+  #backups:
 

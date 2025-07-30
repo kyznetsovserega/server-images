@@ -10,17 +10,17 @@ venv/
 .venv/
 .Python
 
-# Файлы, созданные операционной системой
+# Файлы, созданные ОС
 .DS_Store
 Thumbs.db
 
-# Конфигурации IDE и редакторов
+# Конфиги IDE и редакторов
 .idea/
 .vscode/
 *.iml
 
 # Артефакты тестирования и сборки
-*.pytest_cache/
+.pytest_cache/
 .coverage
 .tox/
 dist/
@@ -34,9 +34,8 @@ logs/
 # Папка с изображениями пользователей
 images/
 
-# Git-репозиторий и gitignore
+# Git-репозиторий
 .git
-.gitignore
 
-# Сам файл .dockerignore
+# Файл .dockerignore
 .dockerignore
